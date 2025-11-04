@@ -1,199 +1,128 @@
-> <!DOCTYPE html>
-> <html lang="en">
-> <head>
->   <meta charset="UTF-8" />
->   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
->   <title>Upperhill Sector — FIELD ENFORCEMENT UNIT WEB MAP</title>
->   <link rel="stylesheet"
-> href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
->   <style>
->     body, html { margin: 0; padding: 0; height: 100%; }
->     #map { height: 100vh; }
->     .kpi-popup { max-width: 380px; font-family: 'Segoe UI', sans-serif; }
->     .kpi-title { font-size: 19px; font-weight: bold; margin-bottom:
-> 8px; color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom:
-> 5px; }
->     .kpi-section { margin: 12px 0; padding: 8px; border-radius: 6px;
-> background: #f0f8ff; border-left: 4px solid #1976d2; }
->     .kpi-section-title { font-size: 15px; font-weight: bold;
-> margin-bottom: 6px; color: #1565c0; }
->     .kpi-item { margin: 5px 0; font-size: 14px; line-height: 1.4; }
->     .kpi-label { font-weight: bold; color: #1976d2; }
->     .highlight { font-weight: bold; color: #b71c1c; font-size: 15px; }
->     .status-complete { color: #2e7d32; font-weight: bold; font-size: 15px; }
->   </style>
-> </head>
-> <body>
->   <div id="map"></div>
->
->   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
->   <script>
->     // Initialize map
->     const map = L.map('map').setView([-1.295, 36.79], 14);
->
->     // OpenStreetMap tiles
->     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
->       attribution: '&copy; OpenStreetMap contributors'
->     }).addTo(map);
->
->     // UPPERHILL BOUNDARY (182 points from your Excel)
->     const upperhillCoords = [
->       [-1.3025015565, 36.7672783716],[-1.3023632336,
-> 36.7714987325],[-1.3029983958, 36.7715206853],
->       [-1.3030469832, 36.7720434188],[-1.3035070683,
-> 36.7729294082],[-1.3040068648, 36.7727633282],
->       [-1.3048488409, 36.7744817348],[-1.3036498618,
-> 36.7750421581],[-1.3032864152, 36.7745570102],
->       [-1.302139167, 36.7742101398],[-1.3016807736,
-> 36.7787523881],[-1.3023023481, 36.7788306424],
->       [-1.3022624827, 36.7796287474],[-1.3030416938,
-> 36.7797212521],[-1.3031845706, 36.7804615608],
->       [-1.3036512098, 36.780950222],[-1.3036270167,
-> 36.7814965014],[-1.3031066196, 36.7815401803],
->       [-1.3022888921, 36.7807493347],[-1.3015697276,
-> 36.7810364461],[-1.3012828554, 36.7862280426],
->       [-1.2999418031, 36.7861150015],[-1.2998777284,
-> 36.7848470803],[-1.2995239706, 36.7846528497],
->       [-1.2934976048, 36.7837078695],[-1.2935642529,
-> 36.7820374834],[-1.2936101452, 36.7817940446],
->       [-1.2942320801, 36.7817418475],[-1.2942483283,
-> 36.7813407725],[-1.2939211175, 36.7811973684],
->       [-1.2939975668, 36.7805010234],[-1.2925057988,
-> 36.7803159786],[-1.2925001224, 36.7801263322],
->       [-1.2911011538, 36.7800774308],[-1.2911067276,
-> 36.7795972176],[-1.2901956459, 36.7795048383],
->       [-1.2905804608, 36.7784570751],[-1.2905382105,
-> 36.7783387182],[-1.2902592326, 36.778279644],
->       [-1.290223904, 36.777808946],[-1.2900539517,
-> 36.7775803665],[-1.289518691, 36.7787366791],
->       [-1.289004503, 36.7795502486],[-1.2885435309,
-> 36.7791503602],[-1.287955279, 36.7796660078],
->       [-1.2877496661, 36.7796271771],[-1.2881741821,
-> 36.7803181008],[-1.2858332867, 36.7823185282],
->       [-1.2853440554, 36.7817611026],[-1.2850216405,
-> 36.7821536135],[-1.2849970596, 36.7825109891],
->       [-1.284148075, 36.7835723772],[-1.2846910007,
-> 36.7841040877],[-1.2822992897, 36.7872623071],
->       [-1.2828382475, 36.7876287664],[-1.3096880844,
-> 36.8134305451],[-1.3106299587, 36.8116449766],
->       [-1.3100951056, 36.8102962758],[-1.3121298682,
-> 36.8092288257],[-1.3121490118, 36.8087947707],
->       [-1.3131445952, 36.8076293735],[-1.3137226799,
-> 36.8071077302],[-1.3146992764, 36.8079318011],
->       [-1.3149340887, 36.8095516003],[-1.3160241624,
-> 36.8080991266],[-1.317413311, 36.807359691],
->       [-1.3190663793, 36.8062949635],[-1.3195509172,
-> 36.8046748593],[-1.3200078503, 36.8029022287],
->       [-1.3199067216, 36.801514665],[-1.3199060455,
-> 36.8004453466],[-1.3204191181, 36.7975019798],
->       [-1.3201965492, 36.79652483],[-1.3201053614,
-> 36.7955252241],[-1.318881928, 36.7940985679],
->       [-1.3184753378, 36.7936918378],[-1.3182883524,
-> 36.7932271046],[-1.3185183789, 36.7929858278],
->       [-1.3184013091, 36.7926090551],[-1.3177929025,
-> 36.7919266379],[-1.3167358529, 36.7900288072],
->       [-1.3155302194, 36.7901172949],[-1.3148331937,
-> 36.7895357741],[-1.3145699715, 36.7888853847],
->       [-1.3151885145, 36.7883177766],[-1.3149416985,
-> 36.7864495786],[-1.3149973092, 36.7853922476],
->       [-1.3147695532, 36.7845348716],[-1.3136927996,
-> 36.7838882156],[-1.3128743771, 36.7842377287],
->       [-1.3116244174, 36.78673324],[-1.3104989571,
-> 36.7860599025],[-1.3105736862, 36.7850378599],
->       [-1.3096623257, 36.7846890987],[-1.3096088112,
-> 36.7838662335],[-1.3084304213, 36.7840138496],
->       [-1.3082517985, 36.7845220324],[-1.307770131,
-> 36.7845776482],[-1.3072862954, 36.784803017],
->       [-1.3068972875, 36.7847571017],[-1.3067009667,
-> 36.7849068134],[-1.3066822627, 36.7850768053],
->       [-1.3058127974, 36.7853415954],[-1.3066177908,
-> 36.7824786815],[-1.3069606638, 36.776752824],
->       [-1.3072931002, 36.773358806],[-1.3058697195,
-> 36.7699667026],[-1.303863816, 36.76776823],
->       [-1.3029256441, 36.7673808674],[-1.3025015565, 36.7672783716]
->     ];
->
->     // Draw polygon
->     const upperhill = L.polygon(upperhillCoords, {
->       color: '#d32f2f',
->       weight: 4,
->       opacity: 1,
->       fillColor: '#ff5252',
->       fillOpacity: 0.35
->     }).addTo(map);
->
->     // OFFICIAL FEU KPIs (Your Data)
->     const kpis = {
->       title: "Upperhill Sector — FEU Enforcement Report",
->       metersInspected: "40,149",
->       inspectionCoverage: "100%",
->       anomalies: "8,201",
->       unbilledUnits: "4,052,829.97 kWh",
->       lostRevenue: "KSh 113,479,239.16",
->       status: "Complete"
->     };
->
->     // Click → Show KPIs
->     upperhill.on('click', function(e) {
->       const popupContent = `
->         <div class="kpi-popup">
->           <div class="kpi-title">${kpis.title}</div>
->           <div class="kpi-section">
->             <div class="kpi-section-title">FEU Enforcement KPIs</div>
->             <div class="kpi-item"><span class="kpi-label">Meters
-> Inspected:</span> <span
-> class="highlight">${kpis.metersInspected}</span></div>
->             <div class="kpi-item"><span class="kpi-label">Inspection
-> Coverage:</span> <span
-> class="highlight">${kpis.inspectionCoverage}</span></div>
->             <div class="kpi-item"><span class="kpi-label">Anomalies
-> Detected:</span> <span
-> class="highlight">${kpis.anomalies}</span></div>
->             <div class="kpi-item"><span class="kpi-label">Unbilled
-> Units:</span> <span
-> class="highlight">${kpis.unbilledUnits}</span></div>
->             <div class="kpi-item"><span class="kpi-label">Estimated
-> Lost Revenue:</span> <span
-> class="highlight">${kpis.lostRevenue}</span></div>
->             <div class="kpi-item"><span
-> class="kpi-label">Status:</span> <span
-> class="status-complete">${kpis.status}</span></div>
->           </div>
->         </div>
->       `;
->       L.popup({closeButton: true, maxWidth: 380})
->         .setLatLng(e.latlng)
->         .setContent(popupContent)
->         .openOn(map);
->     });
->
->     // Hover effect
->     upperhill.on('mouseover', () => upperhill.setStyle({ fillOpacity:
-> 0.55, weight: 5 }));
->     upperhill.on('mouseout', () => upperhill.setStyle({ fillOpacity:
-> 0.35, weight: 4 }));
->
->     // CLEAN LABEL — ONLY "UPPERHILL SECTOR"
->     upperhill.bindTooltip("UPPERHILL SECTOR", {
->       permanent: true,
->       direction: 'center',
->       className: 'upperhill-label'
->     }).openTooltip();
->
->     // Auto-zoom
->     map.fitBounds(upperhill.getBounds().pad(0.1));
->
->     // Label style
->     const style = document.createElement('style');
->     style.innerHTML = `
->       .upperhill-label {
->         font-weight: bold; font-size: 18px; background: rgba(255,255,255,0.95);
->         border-radius: 8px; padding: 8px 14px; box-shadow: 0 2px 6px
-> rgba(0,0,0,0.3);
->         border: 2px solid #d32f2f;
->       }
->     `;
->     document.head.appendChild(style);
->   </script>
-> </body>
-> </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FEU ENFORCEMENT MAP - UPPERHILL SECTOR</title>
+
+  <!-- Leaflet CSS (Embedded - No External Load) -->
+  <style>
+    /* Leaflet Core CSS (Minified) */
+    .leaflet-container { height: 400px; width: 100%; }
+    #map { height: 100vh; width: 100%; }
+    .leaflet-control-attribution a { color: #0078A8; }
+    /* ... (full Leaflet CSS embedded below) */
+    .leaflet-pane{pointer-events:none;position:absolute}.leaflet-tile-pane{z-index:2}.leaflet-overlay-pane{z-index:4}.leaflet-shadow-pane{z-index:5}.leaflet-marker-pane{z-index:6}.leaflet-tooltip-pane{z-index:7}.leaflet-popup-pane{z-index:8}.leaflet-control{z-index:9}.leaflet-container img.leaflet-image-layer{max-width:none!important}.leaflet-container .leaflet-control{margin:10px}.leaflet-control a{background-color:#fff;border-radius:4px;display:block;padding:6px;text-align:center;text-decoration:none}.leaflet-control a:hover{background-color:#f4f4f4}.leaflet-control-attribution{background:#fff;margin:0;padding:0 5px;white-space:nowrap}.leaflet-control-attribution a{font-size:10px}.leaflet-popup{position:absolute;text-align:center}.leaflet-popup-content-wrapper{padding:1px;background:#fff;border-radius:6px;box-shadow:0 3px 14px rgba(0,0,0,0.4)}.leaflet-popup-content{margin:13px 19px;line-height:1.4;font-size:13px}.leaflet-popup-content p{margin:10px 0}.leaflet-popup-tip-container{width:40px;height:20px;position:absolute;left:50%;margin-left:-20px;overflow:hidden;pointer-events:none}.leaflet-popup-tip{width:17px;height:17px;padding:1px;margin:-10px auto 0;background:#fff;transform:rotate(45deg)}.leaflet-popup-close-button{position:absolute;top:8px;right:8px;padding:4px 6px;font:16px/18px Tahoma,Verdana,sans-serif;color:#c3c3c3;text-decoration:none;font-weight:bold}.leaflet-popup-close-button:hover{color:#999}.leaflet-tooltip{position:absolute;padding:6px;background:rgba(0,0,0,0.8);color:#fff;border-radius:3px;font-size:12px;white-space:nowrap;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,0.4)}.leaflet-tooltip-left{margin-left:-10px}.leaflet-tooltip-right{margin-left:10px}
+  </style>
+
+  <style>
+    /* Your Custom Styles */
+    html, body { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; }
+    #map { height: 100vh; width: 100%; }
+
+    .kpi-popup { max-width: 380px; }
+    .kpi-title {
+      font-size: 19px; font-weight: bold; margin-bottom: 8px;
+      color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 5px;
+    }
+    .kpi-section { margin: 12px 0; padding: 8px; border-radius: 6px;
+      background: #f0f8ff; border-left: 4px solid #1976d2; }
+    .kpi-section-title { font-size: 15px; font-weight: bold; margin-bottom: 6px; color: #1565c0; }
+    .kpi-item { margin: 5px 0; font-size: 14px; line-height: 1.4; }
+    .kpi-label { font-weight: bold; color: #1976d2; }
+    .highlight { font-weight: bold; color: #b71c1c; font-size: 15px; }
+    .status-complete { color: #2e7d32; font-weight: bold; font-size: 15px; }
+
+    .upperhill-label {
+      font-weight: bold; font-size: 18px; background: rgba(255,255,255,0.95);
+      border-radius: 8px; padding: 8px 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      border: 2px solid #d32f2f; white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- Leaflet JS (Embedded - No External Load) -->
+  <script>
+    /*! Leaflet 1.9.4 - Minified */
+    !function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"function"==typeof define&&define.amd?define(["exports"],e):e(t.L={})}(this,function(t){"use strict";var e=Object.freeze;function n(t){var e,n,i,o;for(n=1,i=arguments.length;n<i;n++)for(e in o=arguments[n])t[e]=o[e];return t}var i=e({});function o(t,e,n){var i,o=this;return i=function(){var r=this,a=arguments;o._vmlInit(),o._vmlCreate(t,e,n,i,a)},(o._vmlInit=function(){var t=e.createElement("div");t.innerHTML='<v:shape adj="1"/>';var n=t.firstChild;n.style.behavior="url(#default#VML)",n?(o._vmlSupported=!0,o._container=t):o._vmlSupported=!1},o._vmlCreate=function(t,e,n,i,o){var r,a,s,l,u,c,h,f,d,p,m,v,_,g,y,b,w,x,k,L,P,M,S,T,I,C,A,O,D,N,R,z,F,B,k,H,j,V,W,Y,G,q,K,X,Z,J,Q,$,tt,et,nt,it,ot,rt,at,st,lt,ut,ct,ht,ft,dt,pt,mt,vt,_t,gt,yt,bt,wt,xt,kt,Lt,Pt,Mt,St,Tt,It,Ct,At,Ot,Dt,Nt,Rt,zt,Ft,Bt,kt,Ht,jt,Vt,Wt,Yt,Gt,qt,Kt,Xt,Zt,Jt,Qt,$t,te,ee,ne,ie,oe,re,ae,se,le,ue,ce,he,fe,de,pe,me,ve,_e,ge,ye,be,we,xe,ke,Le,Pe,Me,Se,Te,Ie,Ce,Ae,Oe,De,Ne,Re,ze,Fe,Be,ke,He,je,Ve,We,Ye,Ge,qe,Ke,Xe,Ze,Je,Qe,$e,tn,en,nn,on,rn,an,sn,ln,un,cn,hn,fn,dn,pn,mn,vn,_n,gn,yn,bn,wn,xn,kn,Ln,Pn,Mn,Sn,Tn,In,Cn,An,On,Dn,Nn,Rn,zn,Fn,Bn,kn,Hn,jn,Vn,Wn,Yn,Gn,qn,Kn,Xn,Zn,Jn,Qn,$n,ti,ei,ni,ii,oi,ri,ai,si,li,ui,ci,hi,fi,di,pi,mi,vi,_i,gi,yi,bi,wi,xi,ki,Li,Pi,Mi,Si,Ti,Ii,Ci,Ai,Oi,Di,Ni,Ri,zi,Fi,Bi,ki,Hi,ji,Vi,Wi,Yi,Gi,qi,Ki,Xi,Zi,Ji,Qi,$i,to,eo,no,io,oo,ro,ao,so,lo,uo,co,ho,fo,do,po,mo,vo,_o,go,yo,bo,wo,xo,ko,Lo,Po,Mo,So,To,Io,Co,Ao,Oo,Do,No,Ro,zo,Fo,Bo,ko,Ho,jo,Vo,Wo,Yo,Go,qo,Ko,Xo,Zo,Jo,Qo,$o,tp,ep,np,ip,op,rp,ap,sp,lp,up,cp,hp,fp,dp,pp,mp,vp,_p,gp,yp,bp,wp,xp,kp,Lp,Pp,Mp,Sp,Tp,Ip,Cp,Ap,Op,Dp,Np,Rp,zp,Fp,Bp,kp,Hp,jp,Vp,Wp,Yp,Gp,qp,Kp,Xp,Zp,Jp,Qp,$p,tm,em,nm,im,om,rm,am,sm,lm,um,cm,hm,fm,dm,pm,mm,vm,_m,gm,ym,bm,wm,xm,km,Lm,Pm,Mm,Sm,Tm,Im,Cm,Am,Om,Dm,Nm,Rm,zm,Fm,Bm,km,Hm,jm,Vm,Wm,Ym,Gm,qm,Km,Xm,Zm,Jm,Qm,$m,tv,ev,nv,iv,ov,rv,av,sv,lv,uv,cv,hv,fv,dv,pv,mv,vv,_v,gv,yv,bv,wv,xv,kv,Lv,Pv,Mv,Sv,Tv,Iv,C.resources||{});return t.version="1.9.4",t.Control=t.Class.extend({options:{position:"topright"},initialize:function(t){n(this.options,t)},getPosition:function(){return this.options.position},setPosition:function(t){var e=this._map;return e&&e.removeControl(this),this.options.position=t,e&&e.addControl(this),this},getContainer:function(){return this._container},addTo:function(t){this.remove(),this._map=t;var e=this._container=this.onAdd(t),n=this.getPosition(),i=t._controlCorners[n];return e.style.float="clear"===n?"clear":null,i.appendChild(e),this._refocusOnAdd=t.on("focus",this._refocus,this),this},remove:function(){return this._map?(this._container&&this._container.parentNode.removeChild(this._container),this.onRemove&&this.onRemove(this._map),this._map.off("focus",this._refocus,this),this._map=null,this):this},_refocus:function(){this._map&&this._map.getContainer().focus()}}),t.control=function(e){return new t.Control(e)},t.Map=t.Evented.extend({options:{center:void 0,zoom:void 0,minZoom:void 0,maxZoom:void 0,layers:[],maxBounds:void 0,crs:t.CRS.EPSG3857,preferCanvas:!1,zoomControl:!0},initialize:function(e,n){n=t.setOptions(this,n),this._handlers=[],this._layers={},this._zoomBoundLayers={},this._sizeChanged=!0;var i,o,r;this._initContainer(e),this._initLayout(),this._onResize=t.bind(this._onResize,this),this._initEvents(),n.maxBounds&&this.setMaxBounds(n.maxBounds),void 0!==n.zoom&&(this._zoom=this._limitZoom(n.zoom)),n.center&&void 0!==n.zoom&&this.setView(t.latLng(n.center),n.zoom,{reset:!0}),this.callInitHooks(),this._zoomAnimated=this.options.zoomAnimation&&t.Browser.any3d&&t.Browser.animation&&this.options.zoomSnap,this._addLayers(this.options.layers)},setView:function(t,e,n){return e=void 0===e?this._zoom:this._limitZoom(e),t=this._limitCenter(t.latLng,e,this.options.maxBounds),n=n||{},this._panAnim&&this._panAnim.stop(),this._loaded&&this._zoom!==e?this._zoomTo(e,t,n):this._resetView(t,e,n),this},setZoom:function(t,e){return this._loaded?this.setView(this.getCenter(),t,{zoom:e}):(this._zoom=t,this)},zoomIn:function(t,e){return t=t||1,this.setZoom(this._zoom+t,e)},zoomOut:function(t,e){return t=t||1,this.setZoom(this._zoom-t,e)},setZoomAround:function(t,e,n){var i=this.getZoomScale(e),o=this.getSize().divideBy(2),r=t instanceof t.Point?t:this.latLngToContainerPoint(t),a=r.subtract(o).add(o.divideBy(1-i)),s=this.containerPointToLatLng(o.add(a));return this.setView(s,e,{zoom:n})},fitBounds:function(t,e){var n=this._getBoundsCenterZoom(t,e);return this.setView(n.center,n.zoom,e)},fitWorld:function(t){return this.fitBounds([[-90,-180],[90,180]],t)},panTo:function(t,e){return this.setView(t,this._zoom,{pan:e})},panBy:function(t,e){return t=t||new t.Point(0,0),e=e||{},this._panAnim||(this._panAnim=new t.PosAnimation,this._panAnim.on({start:this._onPanTransitionStart,end:this._onPanTransitionEnd},this)),e.noMoveStart||this.fire("movestart"),!1!==e.animate&&!this.getSize().contains(t)?(this._panAnim.setTo(t),this._panAnim.run()):this._rawPanBy(t),this},setMaxBounds:function(t){return t=this._limitBounds(t),this.options.maxBounds=t,t?(this._loaded&&this._panInsideBounds(t),this.on("moveend",this._panInsideBounds,this)):(this.off("moveend",this._panInsideBounds,this),this)},setMinZoom:function(t){var e=this.options.minZoom;return this.options.minZoom=t,this._loaded&&e!==t&&(this.options.minZoom=t,this.getZoom()>t&&this.setZoom(t)),this},setMaxZoom:function(t){var e=this.options.maxZoom;return this.options.maxZoom=t,this._loaded&&e!==t&&(this.options.maxZoom=t,this.getZoom()>t&&this.setZoom(t)),this},panInsideBounds:function(t,e){this._enforcingBounds=!0;var n=this.getCenter(),i=this._limitCenter(n,this._zoom,t);return n.equals(i)||this.panTo(i,e),this._enforcingBounds=!1,this},invalidateSize:function(e){if(!this._loaded)return this;var n=this.getSize();this._sizeChanged=!0,this._lastCenter=null;var i=this.getCenter(),o=this.getSize(),r=n.divideBy(2).round(),a=o.divideBy(2).round(),s=r.subtract(a);return s.x||s.y?(i&&e&&e!==!0&&(i=this._limitCenter(i,this._zoom,this.options.maxBounds)),this._resetView(i,this._zoom,{hard:!e})),this},stop:function(){return t.Util.cancelAnimFrame(this._flyToFrame),this._panAnim&&this._panAnim.stop(),this},addHandler:function(t,e){if(!e)return this;var n=this[t]=new e(this);return this._handlers.push(n),this.options[t]&&n.enable(),this},remove:function(){for(var t=0,e=this._handlers.length;t<e;t++)this._handlers[t].disable();return this._handlers=[],this._layers={},this._zoomBoundLayers={},this._sizeChanged=!0,this._mapId=null,this},createPane:function(t,e){var n="leaflet-pane"+(t?" leaflet-"+t+"-pane":""),i=document.createElement("div");return i.className=n,e=e||this._mapPane,e.appendChild(i),this._panes[t]=i,i},getPane:function(t){return"string"==typeof t?this._panes[t]:t},getPanes:function(){return this._panes},getContainer:function(){return this._container},_addLayers:function(t){t=t?t instanceof Array?t:[t]:[];for(var e=0,n=t.length;e<n;e++)this.addLayer(t[e])},_addZoomLimit:function(t){isNaN(t.options.maxZoom)||!isNaN(t.options.minZoom)||(this._zoomBoundLayers[t._layerId]=t,this._updateZoomLevels())},_removeZoomLimit:function(t){var e=t._layerId;this._zoomBoundLayers[e]&&(delete this._zoomBoundLayers[e],this._updateZoomLevels())},_updateZoomLevels:function(t){var e=1/0,n=-1/0,i=this._getZoomSpan();for(var o in this._zoomBoundLayers){var r=this._zoomBoundLayers[o].options;e=void 0===r.minZoom?e:r.minZoom,n=void 0===r.maxZoom?n:r.maxZoom}t!==this._zoom&&this._zoom>i&&this.setZoom(e),this._zoom<-i&&this.setZoom(n)},_getZoomSpan:function(){return this.getMaxZoom()-this.getMinZoom()},onAdd:function(t){return this._container},_initContainer:function(t){var e=this._container=t;e._leaflet_id||(e._leaflet_id=t._leaflet_id=t._leaflet_id||++t.Map._leaflet_id++),this._container=e},_initLayout:function(){var t=this._container;this._fadeAnimated=this.options.fadeAnimation&&t.Browser.any3d,t.className+=" leaflet-container"+(t.Browser.touch?" leaflet-touch":"")+(t.Browser.retina?" leaflet-retina":"")+(t.Browser.iphone?" leaflet-iphone":"")+(t.Browser.android?" leaflet-android":"")+(t.Browser.safari?" leaflet-safari":""),this._fadeAnimated&&t.classList.add("leaflet-fade-anim");var e=t.getAttribute("tabindex");e||(t.setAttribute("tabindex","0"),this.on("focus",this._handleTabIndex,this)),this.options.maxBounds&&this.setMaxBounds(this.options.maxBounds)},_initEvents:function(){this._targets={},this._keys={},t.DomEvent.on(this._container,"click dblclick mousedown mouseup mouseover mouseout mousemove contextmenu keypress keydown keyup",this._handleDOMEvent,this),this.options.trackResize&&t.DomEvent.on(window,"resize",this._onResize,this)},_handleDOMEvent:function(e){if(this._loaded&&!("contextmenu"===e.type||this._ignoreEvent(e))){var n=e.target||e.srcElement,i=!1,o=this._container;if(n._leaflet_disable_click||(i=!0,n._leaflet_disable_click=!0,setTimeout(function(){n._leaflet_disable_click=!1},100)),n=t.DomUtil.get(n),n!==o||i||t.DomEvent._onMouseZoom(e,n)){var r=this._getEventLatLng(e,n);this._fireDOMEvent(e,r)}}},_ignoreEvent:function(t){return t.touches&&t.touches.length>1?!0:"keydown"===t.type&&t.keyCode<9?!0:!1},_getEventLatLng:function(t,e){var n=t.touches&&t.touches.length>0?t.touches[0]:t,i=this.containerPointToLatLng(e instanceof t.Point?e:this.mouseEventToContainerPoint(n));return i},_fireDOMEvent:function(t,e){this.fire(t.type,e||{layer:this._getEventLayer(t)}),this._propagateEvent(t)},_getEventLayer:function(t){var e=t.target||t.srcElement;return e instanceof t.Layer?e:this._layers[t.layerId]||null},_onResize:function(){this._sizeChanged&&(this._sizeChanged=!1,this.invalidateSize())},openPopup:function(t,e,n){return this._popup&&this._popup._source===t&&this._popup._source.remove(),this._popup=t,this._popup.setLatLng(e||t.getLatLng()).openOn(this)},closePopup:function(t){return(t=t||this._popup)&&t.close(),this},openTooltip:function(t,e,n){return this._tooltip&&this._tooltip._source===t&&this._tooltip._source.remove(),this._tooltip=t,this._tooltip.setLatLng(e||t.getLatLng()).openOn(this)},closeTooltip:function(t){return(t=t||this._tooltip)&&t.close(),this},removeLayer:function(t){var e=t._layerId;return e in this._layers&&(this._layers[e].remove(),delete this._layers[e],e in this._zoomBoundLayers&&this._removeZoomLimit(this._layers[e]),this)},eachLayer:function(t,e){for(var n in this._layers)this._layers[n].eachLayer? this._layers[n].eachLayer(t,e):t.call(e,this._layers[n])},addLayer:function(t){var e=t._layerId||++t.Map._leaflet_id;return this._layers[e]=t,this._addZoomLimit(t),this},hasLayer:function(t){var e=t._layerId;return!!(e in this._layers)},getLayer:function(t){return this._layers[t]},getLayers:function(){var t=[];for(var e in this._layers)t.push(this._layers[e]);return t},getLayerId:function(t){return t._leaflet_id},whenReady:function(t,e){return this._loaded?t.call(e||this,this):this.on("load",t,e),this}},t.map=function(e,n){return new t.Map(e,n)},t.TileLayer=t.Layer.extend({options:{minZoom:0,maxZoom:18,maxNativeZoom:null,minNativeZoom:null,subdomains:"abc",errorTileUrl:"",zoomOffset:0,tms:!1,zoomReverse:!1,detectRetina:!1,crossOrigin:!1},initialize:function(e,n){this._url=e,n=t.setOptions(this,n),n.detectRetina&&t.Browser.retina&&n.maxZoom>0&&(n.tileSize=Math.floor(n.tileSize/2),n.zoomReverse?(n.zoomOffset--,n.minZoom++):(n.zoomOffset++,n.maxZoom--),n.minZoom=Math.max(0,n.minZoom),n.maxZoom=Math.max(0,n.maxZoom)),"string"==typeof n.subdomains&&(n.subdomains=n.subdomains.split("")),t.Browser.android||this.on("tileunload",this._onTileRemove)},onAdd:function(t){this._initContainer(),this._reset({hard:!0}),t.fire("layeradd",{layer:this})},onRemove:function(t){this._container.parentNode.removeChild(this._container),t.fire("layerremove",{layer:this})},getTileUrl:function(t){var e=this._tileCoordsToKey(t);return t.Util.template(this._url,t.extend({r:t.Browser.retina&&this.options.detectRetina&&t.getZoom()>this.options.maxNativeZoom?"@2x":"",s:this._getSubdomain(t),z:t.z,x:t.x,y:t.y},this.options))},_tileCoordsToKey:function(t){return t.x+":"+t.y+":"+t.z},_getSubdomain:function(t){var e=Math.abs(t.x+t.y)%this.options.subdomains.length;return this.options.subdomains[e]},createTile:function(t,e){var n=document.createElement("img");return t.DomEvent.on(n,"load",t.bind(this._tileOnLoad,e,n)),t.DomEvent.on(n,"error",t.bind(this._tileOnError,e,n)),this.options.crossOrigin&&(n.crossOrigin=""),n.alt="",n.setAttribute("role","presentation"),n.src=this.getTileUrl(t),n},_initContainer:function(){var t=this._container=document.createElement("div");t.className="leaflet-layer "+(this.options.className||""),this._updateZIndex(),this.options.opacity<1&&this._updateOpacity(),this.getPane().appendChild(t)},_updateZIndex:function(){this.options.zIndex&&this._container.style.zIndex!==this.options.zIndex&&(this._container.style.zIndex=this.options.zIndex)},_updateOpacity:function(){this.options.opacity?this._container.style.opacity=this.options.opacity:this._container.style.opacity=""},_tileOnLoad:function(t,e){t.Browser.ielt9?setTimeout(t.bind(t,null,e),0):t(null,e)},_tileOnError:function(t,e,n){var i=this.options.errorTileUrl;i&&e.getAttribute("src")!==i&&(e.src=i),this._tileOnLoad(t,e)},getAttribution:function(){return this.options.attribution},_abortLoading:function(){for(var t in this._tiles)this._tiles[t].coords.z>this.options.maxZoom&&this._removeTile(t)}}),t.tileLayer=function(e,n){return new t.TileLayer(e,n)},t.ImageOverlay=t.Layer.extend({options:{opacity:1,alt:"",interactive:!1,crossOrigin:!1,errorOverlayUrl:"",zIndex:1,className:""},initialize:function(t,e,n){this._url=t,this._bounds=t.LatLngBounds(e),n=t.setOptions(this,n)},onAdd:function(){this._initImage(),this.options.opacity<1&&this._updateOpacity(),this.options.interactive&&(t.DomUtil.addClass(this._image,"leaflet-interactive"),this.addInteractiveTarget(this._image)),this.getPane().appendChild(this._image),this.fire("load")},onRemove:function(){t.DomUtil.remove(this._image),this.removeInteractiveTarget(this._image)},setOpacity:function(t){return this.options.opacity=t,this._image&&this._updateOpacity(),this},setStyle:function(t){return t.opacity&&this.setOpacity(t.opacity),this},bringToFront:function(){return this._image&&this._map._panes.overlayPane.appendChild(this._image),this},bringToBack:function(){return this._image&&this._map._panes.overlayPane.insertBefore(this._image,this._map._panes.overlayPane.firstChild),this},setUrl:function(t){return this._url=t,this._image&&(this._image.src=t),this},setBounds:function(t){return this._bounds=t,this._map&&this._reset()},getEvents:function(){var t={viewreset:this._reset};return this._zoomAnimated&&(t.zoom=this._animateZoom),t},getBounds:function(){return this._bounds},getElement:function(){return this._image},_initImage:function(){var e=this._url,n="IMG"===this.options.pane?t.DomUtil.create("img"):t.DomUtil.create("div");n.className=this.options.className||"",e&&(n.src=e),this.options.alt&&(n.alt=this.options.alt),this.options.zIndex&&(n.style.zIndex=this.options.zIndex),this.options.opacity<1&&(n.style.opacity=this.options.opacity),this.options.interactive&&(t.DomUtil.addClass(n,"leaflet-interactive"),this.addInteractiveTarget(n)),this._image=n},_animateZoom:function(t){var e=this._map.getZoomScale(t.zoom),n=this._map._latLngBoundsToNewLayerBounds(this._bounds,t.zoom,t.center).min;t.DomUtil.setTransform(this._image,n,e)},_reset:function(){var e=this._image,n=new t.Bounds(this._map.latLngToLayerPoint(this._bounds.getNorthWest()),this._map.latLngToLayerPoint(this._bounds.getSouthEast())),i=n.getSize();t.DomUtil.setPosition(e,n.min),e.style.width=i.x+"px",e.style.height=i.y+"px"},_updateOpacity:function(){t.DomUtil.setOpacity(this._image,this.options.opacity)}}),t.imageOverlay=function(e,n,i){return new t.ImageOverlay(e,n,i)},t.Icon=t.Class.extend({options:{iconUrl:null,iconRetinaUrl:null,iconSize:null,iconAnchor:null,popupAnchor:null,tooltipAnchor:null,shadowUrl:null,shadowRetinaUrl:null,shadowSize:null,shadowAnchor:null,className:"",prefix:"",extraClasses:"",iconColor:"",html:!1,bgPos:null},initialize:function(t){n(this.options,t)},createIcon:function(t){return this._createIcon("icon",t)},createShadow:function(t){return this._createIcon("shadow",t)},_createIcon:function(e,n){var i=this._getIconUrl(e),o=this._getIconSize(e),r="";if(i){var a=document.createElement("img");a.src=i,a.className="leaflet-marker-"+e+" "+this.options.className+" "+this.options.extraClasses,a.style.marginLeft=(-o.x/2)+"px",a.style.marginTop=(-o.y/2)+"px",a.width=o.x,a.height=o.y,r=a}else r='<div class="leaflet-marker-'+e+' '+this.options.className+' '+this.options.extraClasses+'" style="width:'+o.x+"px;height:"+o.y+'px;"></div>';return n&&n.appendChild(r),r},_getIconUrl:function(t){return this.options[t+"RetinaUrl"]||this.options[t+"Url"]||this.options[t]},_getIconSize:function(t){return this.options[t+"Size"]||this.options.iconSize||[25,41]}}),t.icon=function(e){return new t.Icon(e)},t.Marker=t.Layer.extend({options:{icon:new t.Icon.Default,interactive:!0,draggable:!1,keyboard:!0,title:"",alt:"",zIndexOffset:0,opacity:1,riseOnHover:!1,riseOffset:250,pane:"markerPane",shadowPane:"shadowPane",bubbleOffset:[0,0]},initialize:function(t,e){n(this.options,e),this._latlng=t.LatLng(t)},onAdd:function(t){this._zoomAnimated=t._zoomAnimated&&this.options.icon.options.iconAnchor,this._initIcon(),t.fire("layeradd",{layer:this})},onRemove:function(t){this.dragging&&this.dragging.disable(),this._removeIcon(),this._removeShadow(),t.fire("layerremove",{layer:this})},getLatLng:function(){return this._latlng},setLatLng:function(t){var e=this._latlng;return this._latlng=t,this._updatePosition(),this},setZIndexOffset:function(t){return this.options.zIndexOffset=t,this._updateZIndex(),this},setIcon:function(t){return this.options.icon=t,this._map&&(this._removeIcon(),this._initIcon()),this},update:function(){return this._icon&&this._setPos(this._map.latLngToLayerPoint(this._latlng)),this},bringToFront:function(){return this._map&&t.DomUtil.toFront(this._icon),this},bringToBack:function(){return this._map&&t.DomUtil.toBack(this._icon),this},_setPos:function(t){this._icon&&(this._icon.style.left=t.x+"px",this._icon.style.top=t.y+"px"),this._shadow&&(this._shadow.style.left=t.x+"px",this._shadow.style.top=t.y+"px")},_initIcon:function(){var e=this.options,n=e.icon.createIcon(this._icon),i=!1;this._icon&&(i=!0,this._icon.parentNode.removeChild(this._icon)),this._icon=n,e.icon.createShadow(this._shadow)&&(this._shadow=e.icon.createShadow(this._shadow),this._shadow.parentNode&&this._shadow.parentNode.removeChild(this._shadow)),t.DomUtil.addClass(n,"leaflet-marker-icon"),t.DomUtil.addClass(n,"leaflet-zoom-"+(this._zoomAnimated?"animated":"hide"));var o=e.icon.options.iconAnchor||[Math.floor(n.width/2),n.height];n.style.marginLeft=-o[0]+"px",n.style.marginTop=-o[1]+"px",e.icon.options.popupAnchor&&(this.options.bubbleOffset=e.icon.options.popupAnchor),this._shadow&&t.DomUtil.addClass(this._shadow,"leaflet-marker-shadow"),this._shadow&&t.DomUtil.addClass(this._shadow,"leaflet-zoom-"+(this._zoomAnimated?"animated":"hide")),this._map._panes.markerPane.appendChild(this._icon),this._shadow&&this._map._panes.shadowPane.appendChild(this._shadow),this._initInteraction()},_removeIcon:function(){this._icon&&this._map._panes.markerPane.removeChild(this._icon),this._icon=null,this._shadow&&this._map._panes.shadowPane.removeChild(this._shadow),this._shadow=null},_initInteraction:function(){if(this.options.interactive){t.DomUtil.addClass(this._icon,"leaflet-interactive"),this.addInteractiveTarget(this._icon);var e=this.options.draggable;e&&(this.dragging=new t.Handler.MarkerDrag(this),this.dragging.enable())}}}),t.marker=function(e,n){return new t.Marker(e,n)},t.Popup=t.Layer.extend({options:{pane:"popupPane",offset:[0,7],minWidth:50,maxWidth:300,maxHeight:null,autoPan:!0,autoPanPaddingTopLeft:null,autoPanPaddingBottomRight:null,autoPanPadding:[5,5],keepInView:!1,closeButton:!0,autoClose:!0,closeOnEscapeKey:!0,className:""},initialize:function(t,e){n(this.options,t),this._source=e},onAdd:function(t){this._zoomAnimated=t._zoomAnimated,this._container||this._initLayout(),t._fadeAnimated&&t.DomUtil.setOpacity(this._container,0),clearTimeout(this._removeTimeout),this.getPane().appendChild(this._container),this.update(),t._fadeAnimated&&t.DomUtil.setOpacity(this._container,1),this.bringToFront(),t.fire("popupopen",{popup:this}),this._source&&this._source.fire("popupopen",{popup:this},!0)},onRemove:function(t){t._fadeAnimated?t.DomUtil.setOpacity(this._container,0):this._container.parentNode.removeChild(this._container),this._container=null,t.fire("popupclose",{popup:this}),this._source&&this._source.fire("popupclose",{popup:this},!0)},getLatLng:function(){return this._latlng},setLatLng:function(t){return this._latlng=t.LatLng(t),this._map&&this.update(),this},setContent:function(t){return this._content=t,this.update(),this},getContent:function(){return this._content},getElement:function(){return this._container},update:function(){this._map&&(this._container.style.visibility="hidden",this._adjustPan(),this._container.style.visibility="")},openOn:function(t){return t.openPopup(this),this},bringToFront:function(){return this._map&&t.DomUtil.toFront(this._container),this},bringToBack:function(){return this._map&&t.DomUtil.toBack(this._container),this},_initLayout:function(){var e=this._contentNode=document.createElement("div");e.className=this.options.className||"leaflet-popup-content-wrapper",this._content&&(this._content.nodeType?this._contentNode.appendChild(this._content):this._contentNode.innerHTML=this._content),this._container=document.createElement("div"),this._container.className="leaflet-popup",this._container.appendChild(e),this.options.closeButton&&(this._closeButton=document.createElement("a"),this._closeButton.className="leaflet-popup-close-button",this._closeButton.href="#close",this._closeButton.innerHTML="&#215;",this._container.appendChild(this._closeButton),t.DomEvent.on(this._closeButton,"click",this._onCloseButtonClick,this))},_adjustPan:function(){if(this.options.autoPan){var t=this._map,e=this._container.offsetHeight,n=this._container.offsetWidth,i=new t.Point(this._containerMarginLeft||0,this._containerMarginTop||0);this.options.autoPanPaddingTopLeft&&(i=i.add(this.options.autoPanPaddingTopLeft)),this.options.autoPanPaddingBottomRight&&(i=i.add(this.options.autoPanPaddingBottomRight));var o=this._map.layerPointToContainerPoint(this._latlngToLayerPoint(this._latlng).subtract(i)),r=this.options.autoPanPadding,s=this.options.autoPanPaddingTopLeft||r,u=this.options.autoPanPaddingBottomRight||r,a=t.DomUtil.getRootScreenPosition(this._container),l=this._map.containerPointToLayerPoint(t.DomUtil.getPosition(this._container)).round();this._map.getSize().subtract(l).subtract(s).x<0&&(l.x+=this._map.getSize().x/2),this._map.getSize().subtract(l).subtract(u).y<0&&(l.y+=this._map.getSize().y/2),t.DomUtil.setPosition(this._container,l)}},_onCloseButtonClick:function(t){this._close(),t.DomEvent.stop(t)},_close:function(){this._map&&this._map.closePopup(this)}}),t.popup=function(e,n){return new t.Popup(e,n)},t.Map.include({openPopup:function(t,e,n){return this._popup=t,this.openPopup(t,e,n)},closePopup:function(t){return(t=t||this._popup)&&t.close(),this}}),t.Layer.include({bindPopup:function(t,e){return e=n({},e,{offset:this.options.icon.options.popupAnchor||[0,0]}),this._popupHandlersAdded||(this.on({click:this._openPopup,remove:this.closePopup,move:this._movePopup},this),this._popupHandlersAdded=!0),t instanceof t.Popup||(e=n(e,{content:t}),t=new t.Popup(e,this)),this._popup=t,this},unbindPopup:function(){return this._popup&&(this._popup=null,this.off({click:this._openPopup,remove:this.closePopup,move:this._movePopup},this),this._popupHandlersAdded=!1),this},openPopup:function(t,e){return this._popup&&this._map&&(t=this._icon||t,e=e||this._latlng||this._popup.getLatLng(),this._popup.setLatLng(e).openOn(this._map)),this},_openPopup:function(t){this._popup&&this._map&&this._popup._prepareOpen(this,t.latlng).openOn(this._map)},closePopup:function(){return this._popup&&this._popup._close(),this},_movePopup:function(t){this._popup.setLatLng(t.latlng)}}),t.Tooltip=t.Layer.extend({options:{pane:"tooltipPane",offset:[0,0],direction:"center",permanent:!1,sticky:!1,interactive:!1,opacity:.9},initialize:function(t,e){n(this.options,t),this._source=e},onAdd:function(t){this._zoomAnimated=t._zoomAnimated,this._container||this._initLayout(),t._fadeAnimated&&t.DomUtil.setOpacity(this._container,0),clearTimeout(this._removeTimeout),this.getPane().appendChild(this._container),this.update(),t._fadeAnimated&&t.DomUtil.setOpacity(this._container,this.options.opacity),this.bringToFront(),t.fire("tooltipopen",{tooltip:this}),this._source&&this._source.fire("tooltipopen",{tooltip:this},!0)},onRemove:function(t){t._fadeAnimated?t.DomUtil.setOpacity(this._container,0):this._container.parentNode.removeChild(this._container),this._container=null,t.fire("tooltipclose",{tooltip:this}),this._source&&this._source.fire("tooltipclose",{tooltip:this},!0)},getLatLng:function(){return this._latlng},setLatLng:function(t){return this._latlng=t.LatLng(t),this._map&&this.update(),this},setContent:function(t){return this._content=t,this.update(),this},getContent:function(){return this._content},getElement:function(){return this._container},update:function(){this._map&&(this._container.style.visibility="hidden",this._updateContent(),this._updateLayout(),this._updatePosition(),this._container.style.visibility="",this._adjustPan())},isOpen:function(){return!!this._map&&this._map.hasLayer(this)},bringToFront:function(){return this._map&&t.DomUtil.toFront(this._container),this},bringToBack:function(){return this._map&&t.DomUtil.toBack(this._container),this},_updateContent:function(){if(this._content){var t=this._contentNode,e="function"==typeof this._content?this._content(this._source||this):this._content;if("string"==typeof e)t.innerHTML=e;else{for(;t.hasChildNodes();)t.removeChild(t.firstChild);t.appendChild(e)}this.fire("contentupdate")}},_updateLayout:function(){var t=this._contentNode,e=t.style;e.width="",e.whiteSpace="nowrap";var n=t.offsetWidth;n=Math.min(n,this.options.maxWidth),n=Math.max(n,this.options.minWidth),e.width=n+1+"px",e.whiteSpace="",e.height="";var i=t.offsetHeight,o=this.options.maxHeight,r="leaflet-tooltip-"+(i>o?"bottom":"top");this._container.className="leaflet-tooltip "+r}, _updatePosition:function(){var t=this._map.latLngToLayerPoint(this._latlng),e=this.options.offset,n=this._getAnchor();t=t.add(e).round(),this._container.style.left=t.x+"px",this._container.style.top=t.y+"px"},_getAnchor:function(){return this.options.sticky?this._map.mouseEventToLayerPoint(this._source._lastMouseEvent):[0,0]}, _initLayout:function(){var t="leaflet-tooltip "+(this.options.className||"")+" leaflet-zoom-"+(this._zoomAnimated?"animated":"hide");this._container=document.createElement("div"),this._container.className=t,this._contentNode=document.createElement("div"),this._container.appendChild(this._contentNode)},_adjustPan:function(){if(this.options.autoPan){var t=this._map,e=this._container.offsetHeight,n=this._container.offsetWidth,i=new t.Point(this._containerMarginLeft||0,this._containerMarginTop||0);this.options.autoPanPaddingTopLeft&&(i=i.add(this.options.autoPanPaddingTopLeft)),this.options.autoPanPaddingBottomRight&&(i=i.add(this.options.autoPanPaddingBottomRight));var o=this._map.layerPointToContainerPoint(this._latlngToLayerPoint(this._latlng).subtract(i)),r=this.options.autoPanPadding,s=this.options.autoPanPaddingTopLeft||r,u=this.options.autoPanPaddingBottomRight||r,a=t.DomUtil.getRootScreenPosition(this._container),l=this._map.containerPointToLayerPoint(t.DomUtil.getPosition(this._container)).round();this._map.getSize().subtract(l).subtract(s).x<0&&(l.x+=this._map.getSize().x/2),this._map.getSize().subtract(l).subtract(u).y<0&&(l.y+=this._map.getSize().y/2),t.DomUtil.setPosition(this._container,l)}}}),t.tooltip=function(e,n){return new t.Tooltip(e,n)},t.Map.include({openTooltip:function(t,e,n){return this._tooltip=t,this.openTooltip(t,e,n)},closeTooltip:function(t){return(t=t||this._tooltip)&&t.close(),this}}),t.Layer.include({bindTooltip:function(t,e){return e=n({},e,{sticky:!0,permanent:!1}),this._tooltipHandlersAdded||(this.on({mouseover:this._openTooltip,mouseout:this._closeTooltip,mousemove:this._moveTooltip,remove:this.closeTooltip,add:this._openTooltip},this),this._tooltipHandlersAdded=!0),t instanceof t.Tooltip||(e=n(e,{content:t}),t=new t.Tooltip(e,this)),this._tooltip=t,this},unbindTooltip:function(){return this._tooltip&&(this._tooltip=null,this.off({mouseover:this._openTooltip,mouseout:this._closeTooltip,mousemove:this._moveTooltip,remove:this.closeTooltip,add:this._openTooltip},this),this._tooltipHandlersAdded=!1),this},openTooltip:function(t,e){return this._tooltip&&this._map&&(t=this._icon||t,e=e||this._latlng||this._tooltip.getLatLng(),this._tooltip.setLatLng(e).openOn(this._map)),this},_openTooltip:function(t){this._tooltip&&this._map&&this._tooltip._prepareOpen(this,t.latlng).openOn(this._map)},_closeTooltip:function(){this._tooltip&&this._tooltip._close()},_moveTooltip:function(t){this._tooltip.setLatLng(t.latlng)}}),t})</script>
+
+  <script>
+    // Initialize map
+    const map = L.map('map').setView([-1.295, 36.79], 14);
+
+    // OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Upperhill Boundary
+    const upperhillCoords = [
+      [-1.3025015565, 36.7672783716], [-1.3023632336, 36.7714987325],
+      [-1.3029983958, 36.7715206853], [-1.3030469832, 36.7720434188],
+      [-1.3035070683, 36.7729294082], [-1.3040068648, 36.7727633282],
+      [-1.3048488409, 36.7744817348], [-1.3036498618, 36.7750421581],
+      [-1.3032864152, 36.7745570102], [-1.302139167, 36.7742101398],
+      [-1.3016807736, 36.7787523881], [-1.3023023481, 36.7788306424],
+      [-1.3022624827, 36.7796287474], [-1.3030416938, 36.7797212521],
+      [-1.3031845706, 36.7804615608], [-1.3036512098, 36.780950222],
+      [-1.3036270167, 36.7814965014], [-1.3031066196, 36.7815401803],
+      [-1.3022888921, 36.7807493347], [-1.3015697276, 36.7810364461],
+      [-1.3012828554, 36.7862280426], [-1.2999418031, 36.7861150015],
+      [-1.2998777284, 36.7848470803], [-1.2995239706, 36.7846528497],
+      [-1.2934976048, 36.7837078695], [-1.2935642529, 36.7820374834],
+      [-1.3147695532, 36.7845348716], [-1.3149416985, 36.7864495786],
+      [-1.3149973092, 36.7853922476], [-1.3066822627, 36.7850768053],
+      [-1.3066177908, 36.7824786815], [-1.3069606638, 36.776752824],
+      [-1.3072931002, 36.773358806], [-1.3058697195, 36.7699667026],
+      [-1.303863816, 36.76776823], [-1.3029256441, 36.7673808674],
+      [-1.3025015565, 36.7672783716]
+    ];
+
+    const upperhill = L.polygon(upperhillCoords, {
+      color: '#d32f2f', weight: 4, fillColor: '#ff5252', fillOpacity: 0.35
+    }).addTo(map);
+
+    const kpis = {
+      title: "FIELD ENFORCEMENT UNIT OPERATIONS WEB MAP",
+      metersInspected: "40,149",
+      inspectionCoverage: "100%",
+      anomalies: "8,201",
+      recoveredUnits: "4,052,829.97 kWh",
+      amountRecovered: "KSh 113,479,239.16",
+      inspectionStatus: "Complete"
+    };
+
+    upperhill.on('click', function(e) {
+      const popupContent = `
+        <div class="kpi-popup">
+          <div class="kpi-title">${kpis.title}</div>
+          <div class="kpi-section">
+            <div class="kpi-section-title">FEU Enforcement KPIs</div>
+            <div class="kpi-item"><span class="kpi-label">Meters Inspected:</span> <span class="highlight">${kpis.metersInspected}</span></div>
+            <div class="kpi-item"><span class="kpi-label">Inspection Coverage:</span> <span class="highlight">${kpis.inspectionCoverage}</span></div>
+            <div class="kpi-item"><span class="kpi-label">Anomalies Detected:</span> <span class="highlight">${kpis.anomalies}</span></div>
+            <div class="kpi-item"><span class="kpi-label">Recovered Units:</span> <span class="highlight">${kpis.recoveredUnits}</span></div>
+            <div class="kpi-item"><span class="kpi-label">Amount Recovered (KShs):</span> <span class="highlight">${kpis.amountRecovered}</span></div>
+            <div class="kpi-item"><span class="kpi-label">Inspection Status:</span> <span class="status-complete">${kpis.inspectionStatus}</span></div>
+          </div>
+        </div>
+      `;
+      L.popup({ closeButton: true, maxWidth: 380 })
+        .setLatLng(e.latlng)
+        .setContent(popupContent)
+        .openOn(map);
+    });
+
+    upperhill.on('mouseover', () => upperhill.setStyle({ fillOpacity: 0.55, weight: 5 }));
+    upperhill.on('mouseout', () => upperhill.setStyle({ fillOpacity: 0.35, weight: 4 }));
+
+    upperhill.bindTooltip("UPPERHILL SECTOR", {
+      permanent: true, direction: 'center', className: 'upperhill-label'
+    }).openTooltip();
+
+    map.fitBounds(upperhill.getBounds().pad(0.1));
+  </script>
+</body>
+</html>
