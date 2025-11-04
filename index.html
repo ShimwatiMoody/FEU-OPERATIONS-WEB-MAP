@@ -25,10 +25,10 @@
   <script>
     const map = L.map('map').setView([-1.295, 36.79], 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // === YOUR EXACT 182 COORDINATES (FULL LIST, CLOSED) ===
+    // === YOUR 181 UNIQUE COORDINATES (NO DUPLICATE CLOSURE) ===
     const upperhillCoords = [
       [-1.3025015565, 36.7672783716], [-1.3023632336, 36.7714987325], [-1.3029983958, 36.7715206853],
       [-1.3030469832, 36.7720434188], [-1.3035070683, 36.7729294082], [-1.3040068648, 36.7727633282],
@@ -66,7 +66,8 @@
       [-1.3068972875, 36.7847571017], [-1.3067009667, 36.7849068134], [-1.3066822627, 36.7850768053],
       [-1.3058127974, 36.7853415954], [-1.3066177908, 36.7824786815], [-1.3069606638, 36.776752824],
       [-1.3072931002, 36.773358806], [-1.3058697195, 36.7699667026], [-1.303863816, 36.76776823],
-      [-1.3029256441, 36.7673808674], [-1.3025015565, 36.7672783716]
+      [-1.3029256441, 36.7673808674]
+      // NO DUPLICATE — Leaflet auto-closes
     ];
 
     const upperhill = L.polygon(upperhillCoords, { 
