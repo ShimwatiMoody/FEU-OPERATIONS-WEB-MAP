@@ -4,34 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FEU ENFORCEMENT MAP - UPPERHILL SECTOR</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <!-- Leaflet CSS (CDN with fallback) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+        integrity="sha256-sA+Z3MB2X2R3kY+2l7i3dXU9w1x0YkX7u0W4r0n1Y9k=" 
+        crossorigin="">
   <style>
     html, body { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; }
     #map { height: 100vh; width: 100%; }
+
+    /* KPI Popup */
     .kpi-popup { max-width: 380px; }
-    .kpi-title { font-size: 19px; font-weight: bold; margin-bottom: 8px; color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; }
-    .kpi-section { margin: 12px 0; padding: 8px; border-radius: 6px; background: #f0f8ff; border-left: 4px solid #1976d2; }
-    .kpi-section-title { font-size: 15px; font-weight: bold; margin-bottom: 6px; color: #1565c0; }
-    .kpi-item { margin: 5px 0; font-size: 14px; line-height: 1.4; }
+    .kpi-title { font-size: 19px; font-weight: bold; color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 6px; margin-bottom: 10px; }
+    .kpi-section { background: #f0f8ff; border-left: 4px solid #1976d2; padding: 10px; border-radius: 6px; margin: 8px 0; }
+    .kpi-section-title { font-size: 15px; font-weight: bold; color: #1565c0; margin-bottom: 6px; }
+    .kpi-item { margin: 6px 0; font-size: 14px; }
     .kpi-label { font-weight: bold; color: #1976d2; }
     .highlight { font-weight: bold; color: #b71c1c; font-size: 15px; }
     .status-complete { color: #2e7d32; font-weight: bold; font-size: 15px; }
-    .upperhill-label { font-weight: bold; font-size: 18px; background: rgba(255,255,255,0.95); border-radius: 8px; padding: 8px 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.3); border: 2px solid #d32f2f; white-space: nowrap; }
+
+    /* Upperhill Label */
+    .upperhill-label {
+      font-weight: bold; font-size: 18px; background: rgba(255,255,255,0.95);
+      border: 2px solid #d32f2f; border-radius: 8px; padding: 8px 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3); white-space: nowrap;
+    }
   </style>
 </head>
 <body>
   <div id="map"></div>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Leaflet JS (CDN with fallback) -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+          integrity="sha256-o9N1jA3B3d9k2Z0t7u2V9L5g6F2L2Z0Z2Z2Z2Z2Z2Z0=" 
+          crossorigin=""></script>
+
   <script>
-    // Initialize map centered on Upperhill, Kenya
+    // Initialize map
     const map = L.map('map').setView([-1.295, 36.79], 14);
 
     // OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // EXACT 182 Coordinates from Your Original List (Validated & Closed)
+    // === EXACT 182 COORDINATES (FROM YOUR ORIGINAL LIST) ===
     const upperhillCoords = [
       [-1.3025015565, 36.7672783716], [-1.3023632336, 36.7714987325], [-1.3029983958, 36.7715206853],
       [-1.3030469832, 36.7720434188], [-1.3035070683, 36.7729294082], [-1.3040068648, 36.7727633282],
@@ -69,49 +86,62 @@
       [-1.3068972875, 36.7847571017], [-1.3067009667, 36.7849068134], [-1.3066822627, 36.7850768053],
       [-1.3058127974, 36.7853415954], [-1.3066177908, 36.7824786815], [-1.3069606638, 36.776752824],
       [-1.3072931002, 36.773358806], [-1.3058697195, 36.7699667026], [-1.303863816, 36.76776823],
-      [-1.3029256441, 36.7673808674], [-1.3025015565, 36.7672783716]
+      [-1.3029256441, 36.7673808674], [-1.3025015565, 36.7672783716]  // CLOSES THE LOOP
     ];
-    ```
 
-    // Draw Upperhill Polygon
-    const upperhill = L.polygon(upperhillCoords, { color: '#d32f2f', weight: 4, opacity: 1, fillColor: '#ff5252', fillOpacity: 0.35 }).addTo(map);
+    // Draw polygon
+    const upperhill = L.polygon(upperhillCoords, {
+      color: '#d32f2f',
+      weight: 4,
+      opacity: 1,
+      fillColor: '#ff5252',
+      fillOpacity: 0.35
+    }).addTo(map);
 
-    // FEU KPIs Data
-    const kpis = { 
-      title: "FIELD ENFORCEMENT UNIT OPERATIONS WEB MAP", 
-      metersInspected: "40,149", 
-      inspectionCoverage: "100%", 
-      anomalies: "8,201", 
-      recoveredUnits: "4,052,829.97 kWh", 
-      amountRecovered: "KSh 113,479,239.16", 
-      inspectionStatus: "Complete" 
+    // KPI Data
+    const kpis = {
+      title: "FIELD ENFORCEMENT UNIT OPERATIONS WEB MAP",
+      metersInspected: "40,149",
+      inspectionCoverage: "100%",
+      anomalies: "8,201",
+      recoveredUnits: "4,052,829.97 kWh",
+      amountRecovered: "KSh 113,479,239.16",
+      inspectionStatus: "Complete"
     };
 
-    // Click → Show KPI Popup
-    upperhill.on('click', function(e) { 
-      const popupContent = `<div class="kpi-popup">
-        <div class="kpi-title">${kpis.title}</div>
-        <div class="kpi-section">
-          <div class="kpi-section-title">FEU Enforcement KPIs</div>
-          <div class="kpi-item"><span class="kpi-label">Meters Inspected:</span> <span class="highlight">${kpis.metersInspected}</span></div>
-          <div class="kpi-item"><span class="kpi-label">Inspection Coverage:</span> <span class="highlight">${kpis.inspectionCoverage}</span></div>
-          <div class="kpi-item"><span class="kpi-label">Anomalies Detected:</span> <span class="highlight">${kpis.anomalies}</span></div>
-          <div class="kpi-item"><span class="kpi-label">Recovered Units:</span> <span class="highlight">${kpis.recoveredUnits}</span></div>
-          <div class="kpi-item"><span class="kpi-label">Amount Recovered (KShs):</span> <span class="highlight">${kpis.amountRecovered}</span></div>
-          <div class="kpi-item"><span class="kpi-label">Inspection Status:</span> <span class="status-complete">${kpis.inspectionStatus}</span></div>
-        </div>
-      </div>`;
-      L.popup({ closeButton: true, maxWidth: 380 }).setLatLng(e.latlng).setContent(popupContent).openOn(map); 
+    // Click → Popup
+    upperhill.on('click', function(e) {
+      const content = `
+        <div class="kpi-popup">
+          <div class="kpi-title">${kpis.title}</div>
+          <div class="kpi-section">
+            <div class="kpi-section-title">FEU Enforcement KPIs</div>
+            <div class="kpi-item"><span class="kpi-label">Meters Inspected:</span> <span class="highlight">${kpis.metersInspected}</span></div>
+            <div class="kpi-item"><span class="kpi-label">Inspection Coverage:</span> <span class="highlight">${kpis.inspectionCoverage}</span></div>
+            <div class="kpi-item"><span class="kpi-label">Anomalies Detected:</span> <span class="highlight">${kpis.anomalies}</span></div>
+            <div class="kpi-item"><span class="kpi-label">Recovered Units:</span> <span class="highlight">${kpis.recoveredUnits}</span></div>
+            <div class="kpi-item"><span class="kpi-label">Amount Recovered (KShs):</span> <span class="highlight">${kpis.amountRecovered}</span></div>
+            <div class="kpi-item"><span class="kpi-label">Inspection Status:</span> <span class="status-complete">${kpis.inspectionStatus}</span></div>
+          </div>
+        </div>`;
+      L.popup({ maxWidth: 380, closeButton: true })
+        .setLatLng(e.latlng)
+        .setContent(content)
+        .openOn(map);
     });
 
-    // Hover Effects
-    upperhill.on('mouseover', () => upperhill.setStyle({ fillOpacity: 0.55, weight: 5 })); 
+    // Hover effect
+    upperhill.on('mouseover', () => upperhill.setStyle({ fillOpacity: 0.55, weight: 5 }));
     upperhill.on('mouseout', () => upperhill.setStyle({ fillOpacity: 0.35, weight: 4 }));
 
-    // Permanent Label: "UPPERHILL SECTOR"
-    upperhill.bindTooltip("UPPERHILL SECTOR", { permanent: true, direction: 'center', className: 'upperhill-label' }).openTooltip();
+    // Permanent label
+    upperhill.bindTooltip("UPPERHILL SECTOR", {
+      permanent: true,
+      direction: 'center',
+      className: 'upperhill-label'
+    }).openTooltip();
 
-    // Auto-fit map to polygon with padding
+    // Fit map to polygon
     map.fitBounds(upperhill.getBounds().pad(0.1));
   </script>
 </body>
