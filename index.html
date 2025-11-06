@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FIELD ENFORCEMENT UNIT OPERATIONS WEB MAP</title>
+  <title>FEU Operations – Upperhill Sector</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -66,7 +66,11 @@
       font-weight: bold;
       font-size: 15px;
     }
+  </style>
+</head>
+<body>
 
+  <div id="map"></div>
 
   <!-- Leaflet JS + Omnivore -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -99,20 +103,9 @@
         // Fit map to KML bounds
         map.fitBounds(layer.getBounds().pad(0.1));
 
-        // === PERMANENT LABEL ===
-        const bounds = layer.getBounds();
-        const center = bounds.getCenter();
-        L.marker(center, {
-          icon: L.divIcon({
-            className: 'upperhill-label',
-            html: 'UPPERHILL SECTOR',
-            iconSize: [180, 40]
-          })
-        }).addTo(map);
-
         // === KPI DATA ===
         const kpis = {
-          title: "UPPERHILL SECTOR",
+          title: "FIELD ENFORCEMENT UNIT OPERATIONS WEB MAP",
           metersInspected: "40,149",
           inspectionCoverage: "100%",
           anomalies: "8,201",
@@ -159,6 +152,3 @@
   </script>
 </body>
 </html>
-
-
-
