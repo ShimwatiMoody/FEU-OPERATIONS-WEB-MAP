@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FEU Operations – Sector Dashboard</title>
+  <title>FIELD ENFORCEMENT UNIT OPERATIONS</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -104,12 +104,13 @@
         });
 
         const kpis = {
-          title: "UPPERHILL SECTOR – FEU Operations",
+          title: "UPPERHILL SECTOR",
           metersInspected: "40,149",
           inspectionCoverage: "100%",
           anomalies: "8,201",
           recoveredUnits: "4,052,829.97 kWh",
           amountRecovered: "KSh 113,479,239.16",
+          arrests: "22",
           inspectionStatus: "Complete"
         };
 
@@ -118,12 +119,13 @@
             <div class="kpi-popup">
               <div class="kpi-title">${kpis.title}</div>
               <div class="kpi-section">
-                <div class="kpi-section-title">FEU Enforcement KPIs</div>
+                <div class="kpi-section-title">FEU ENFORCEMENT KPIs</div>
                 <div class="kpi-item"><b>Meters Inspected:</b> ${kpis.metersInspected}</div>
                 <div class="kpi-item"><b>Inspection Coverage:</b> ${kpis.inspectionCoverage}</div>
                 <div class="kpi-item"><b>Anomalies:</b> ${kpis.anomalies}</div>
                 <div class="kpi-item"><b>Recovered Units:</b> ${kpis.recoveredUnits}</div>
                 <div class="kpi-item"><b>Amount Recovered:</b> ${kpis.amountRecovered}</div>
+                <div class="kpi-item"><b>Arrests:</b> ${kpis.arrests}</div>
                 <div class="kpi-item"><b>Status:</b> <span class="status-complete">${kpis.inspectionStatus}</span></div>
               </div>
             </div>`;
@@ -150,12 +152,13 @@
         });
 
         const kpis = {
-          title: "MOUNTAIN VIEW SECTOR – FEU Operations",
+          title: "MOUNTAIN VIEW SECTOR",
           metersInspected: "0",
           inspectionCoverage: "0%",
           anomalies: "0",
           recoveredUnits: "0 kWh",
           amountRecovered: "KSh 0.00",
+          arrests:"0",
           inspectionStatus: "Pending"
         };
 
@@ -164,12 +167,13 @@
             <div class="kpi-popup">
               <div class="kpi-title">${kpis.title}</div>
               <div class="kpi-section">
-                <div class="kpi-section-title">FEU Enforcement KPIs</div>
+                <div class="kpi-section-title">FEU ENFORCEMENT KPIs</div>
                 <div class="kpi-item"><b>Meters Inspected:</b> ${kpis.metersInspected}</div>
                 <div class="kpi-item"><b>Inspection Coverage:</b> ${kpis.inspectionCoverage}</div>
                 <div class="kpi-item"><b>Anomalies:</b> ${kpis.anomalies}</div>
                 <div class="kpi-item"><b>Recovered Units:</b> ${kpis.recoveredUnits}</div>
                 <div class="kpi-item"><b>Amount Recovered:</b> ${kpis.amountRecovered}</div>
+                  <div class="kpi-item"><b>Arrests:</b> ${kpis.arrests}</div>
                 <div class="kpi-item"><b>Status:</b> <span class="status-pending">${kpis.inspectionStatus}</span></div>
               </div>
             </div>`;
@@ -185,3 +189,4 @@
   </script>
 </body>
 </html>
+
