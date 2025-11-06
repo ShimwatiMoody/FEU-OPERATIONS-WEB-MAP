@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FIELD ENFORCEMENT UNIT OPERATIONS</title>
+  <title>FEU Operations – Sector Dashboard</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
   <!-- Custom Styling -->
   <style>
@@ -66,6 +65,11 @@
       font-weight: bold;
       font-size: 15px;
     }
+    .status-pending {
+      color: #f57c00;
+      font-weight: bold;
+      font-size: 15px;
+    }
   </style>
 </head>
 <body>
@@ -78,7 +82,7 @@
 
   <script>
     // Initialize map
-    const map = L.map('map').setView([-1.3025, 36.78], 14);
+    const map = L.map('map').setView([-1.3025, 36.78], 13);
 
     // Base map
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -86,12 +90,11 @@
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // === LOAD KML & ADD INTERACTION ===
-    const kmlLayer = omnivore.kml('UPPERHILL%20EXTENT.kml')
+    // === UPPERHILL SECTOR ===
+    const upperhillKML = omnivore.kml('UPPERHILL%20EXTENT.kml')
       .on('ready', function () {
         const layer = this;
 
-        // Style the polygon
         layer.setStyle({
           color: '#d32f2f',
           weight: 4,
@@ -100,58 +103,85 @@
           fillOpacity: 0.35
         });
 
-        // Fit map to KML bounds
-        map.fitBounds(layer.getBounds().pad(0.1));
-
-        // === KPI DATA ===
         const kpis = {
-          title: "UPPERHILL SECTOR",
+          title: "UPPERHILL SECTOR – FEU Operations",
           metersInspected: "40,149",
           inspectionCoverage: "100%",
           anomalies: "8,201",
           recoveredUnits: "4,052,829.97 kWh",
           amountRecovered: "KSh 113,479,239.16",
-          arrests: "22",
           inspectionStatus: "Complete"
         };
 
-        // === POPUP ON CLICK/TOUCH ===
         layer.on('click', function (e) {
-          const popupContent = `
+          const popup = `
             <div class="kpi-popup">
               <div class="kpi-title">${kpis.title}</div>
               <div class="kpi-section">
-                <div class="kpi-section-title">FEU ENFORCEMENT KPIs</div>
-                <div class="kpi-item"><span class="kpi-label">Meters Inspected:</span> <span class="highlight">${kpis.metersInspected}</span></div>
-                <div class="kpi-item"><span class="kpi-label">Inspection Coverage:</span> <span class="highlight">${kpis.inspectionCoverage}</span></div>
-                <div class="kpi-item"><span class="kpi-label">Anomalies Detected:</span> <span class="highlight">${kpis.anomalies}</span></div>
-                <div class="kpi-item"><span class="kpi-label">Recovered Units:</span> <span class="highlight">${kpis.recoveredUnits}</span></div>
-                <div class="kpi-item"><span class="kpi-label">Amount Recovered (KShs):</span> <span class="highlight">${kpis.amountRecovered}</span></div>
-                <div class="kpi-item"><span class="kpi-label">Arrests:</span> <span class="highlight">${kpis.arrests}</span></div>
-                <div class="kpi-item"><span class="kpi-label">Inspection Status:</span> <span class="status-complete">${kpis.inspectionStatus}</span></div>
+                <div class="kpi-section-title">FEU Enforcement KPIs</div>
+                <div class="kpi-item"><b>Meters Inspected:</b> ${kpis.metersInspected}</div>
+                <div class="kpi-item"><b>Inspection Coverage:</b> ${kpis.inspectionCoverage}</div>
+                <div class="kpi-item"><b>Anomalies:</b> ${kpis.anomalies}</div>
+                <div class="kpi-item"><b>Recovered Units:</b> ${kpis.recoveredUnits}</div>
+                <div class="kpi-item"><b>Amount Recovered:</b> ${kpis.amountRecovered}</div>
+                <div class="kpi-item"><b>Status:</b> <span class="status-complete">${kpis.inspectionStatus}</span></div>
               </div>
-            </div>
-          `;
-
-          L.popup({
-            maxWidth: 340,
-            closeButton: true,
-            offset: [0, -10]
-          })
-          .setLatLng(e.latlng)
-          .setContent(popupContent)
-          .openOn(map);
+            </div>`;
+          L.popup().setLatLng(e.latlng).setContent(popup).openOn(map);
         });
 
-        // === HOVER EFFECT (Desktop) ===
         layer.on('mouseover', () => layer.setStyle({ fillOpacity: 0.55, weight: 5 }));
         layer.on('mouseout', () => layer.setStyle({ fillOpacity: 0.35, weight: 4 }));
-      })
-      .on('error', function () {
-        alert('Error loading KML file. Check filename and path.');
-      })
-      .addTo(map);
+
+        layer.addTo(map);
+      });
+
+    // === MOUNTAIN VIEW SECTOR ===
+    const mountainKML = omnivore.kml('MOUNTAIN%20VIEW%20EXTENT.kml')
+      .on('ready', function () {
+        const layer = this;
+
+        layer.setStyle({
+          color: '#1565c0',
+          weight: 4,
+          opacity: 1,
+          fillColor: '#64b5f6',
+          fillOpacity: 0.35
+        });
+
+        const kpis = {
+          title: "MOUNTAIN VIEW SECTOR – FEU Operations",
+          metersInspected: "0",
+          inspectionCoverage: "0%",
+          anomalies: "0",
+          recoveredUnits: "0 kWh",
+          amountRecovered: "KSh 0.00",
+          inspectionStatus: "Pending"
+        };
+
+        layer.on('click', function (e) {
+          const popup = `
+            <div class="kpi-popup">
+              <div class="kpi-title">${kpis.title}</div>
+              <div class="kpi-section">
+                <div class="kpi-section-title">FEU Enforcement KPIs</div>
+                <div class="kpi-item"><b>Meters Inspected:</b> ${kpis.metersInspected}</div>
+                <div class="kpi-item"><b>Inspection Coverage:</b> ${kpis.inspectionCoverage}</div>
+                <div class="kpi-item"><b>Anomalies:</b> ${kpis.anomalies}</div>
+                <div class="kpi-item"><b>Recovered Units:</b> ${kpis.recoveredUnits}</div>
+                <div class="kpi-item"><b>Amount Recovered:</b> ${kpis.amountRecovered}</div>
+                <div class="kpi-item"><b>Status:</b> <span class="status-pending">${kpis.inspectionStatus}</span></div>
+              </div>
+            </div>`;
+          L.popup().setLatLng(e.latlng).setContent(popup).openOn(map);
+        });
+
+        layer.on('mouseover', () => layer.setStyle({ fillOpacity: 0.55, weight: 5 }));
+        layer.on('mouseout', () => layer.setStyle({ fillOpacity: 0.35, weight: 4 }));
+
+        layer.addTo(map);
+      });
+
   </script>
 </body>
 </html>
-
