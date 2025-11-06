@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FEU Operations – Upperhill Sector</title>
+  <title>FIELD ENFORCEMENT UNIT OPERATIONS</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -105,12 +105,13 @@
 
         // === KPI DATA ===
         const kpis = {
-          title: "FIELD ENFORCEMENT UNIT OPERATIONS WEB MAP",
+          title: "UPPERHILL SECTOR",
           metersInspected: "40,149",
           inspectionCoverage: "100%",
           anomalies: "8,201",
           recoveredUnits: "4,052,829.97 kWh",
           amountRecovered: "KSh 113,479,239.16",
+          arrests: "22",
           inspectionStatus: "Complete"
         };
 
@@ -120,12 +121,13 @@
             <div class="kpi-popup">
               <div class="kpi-title">${kpis.title}</div>
               <div class="kpi-section">
-                <div class="kpi-section-title">FEU Enforcement KPIs</div>
+                <div class="kpi-section-title">FEU ENFORCEMENT KPIs</div>
                 <div class="kpi-item"><span class="kpi-label">Meters Inspected:</span> <span class="highlight">${kpis.metersInspected}</span></div>
                 <div class="kpi-item"><span class="kpi-label">Inspection Coverage:</span> <span class="highlight">${kpis.inspectionCoverage}</span></div>
                 <div class="kpi-item"><span class="kpi-label">Anomalies Detected:</span> <span class="highlight">${kpis.anomalies}</span></div>
                 <div class="kpi-item"><span class="kpi-label">Recovered Units:</span> <span class="highlight">${kpis.recoveredUnits}</span></div>
                 <div class="kpi-item"><span class="kpi-label">Amount Recovered (KShs):</span> <span class="highlight">${kpis.amountRecovered}</span></div>
+                <div class="kpi-item"><span class="kpi-label">Arrests:</span> <span class="highlight">${kpis.arrests}</span></div>
                 <div class="kpi-item"><span class="kpi-label">Inspection Status:</span> <span class="status-complete">${kpis.inspectionStatus}</span></div>
               </div>
             </div>
@@ -152,3 +154,4 @@
   </script>
 </body>
 </html>
+
