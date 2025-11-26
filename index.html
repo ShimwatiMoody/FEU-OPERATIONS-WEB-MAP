@@ -1,240 +1,169 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FIELD ENFORCEMENT UNIT OPERATIONS</title>
+    <meta charset="utf-8" />
+    <title>FEU Operations Web Map</title>
 
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
-  <!-- Custom Styling -->
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
 
-    #map {
-      width: 100%;
-      height: 100%;
-    }
+        /* Sidebar */
+        #sidebar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100%;
+            background: #ffffffee;
+            padding: 20px;
+            border-right: 2px solid #ddd;
+            z-index: 1000;
+            overflow-y: auto;
+        }
 
-    /* KPI Popup Styling */
-    .kpi-popup {
-      max-width: 340px;
-      font-size: 14px;
-    }
-    .kpi-title {
-      font-size: 18px;
-      font-weight: bold;
-      color: #d32f2f;
-      border-bottom: 2px solid #d32f2f;
-      padding-bottom: 6px;
-      margin-bottom: 10px;
-    }
-    .kpi-section {
-      background: #f8f9fa;
-      padding: 10px;
-      border-radius: 6px;
-      border-left: 4px solid #1976d2;
-      margin: 8px 0;
-    }
-    .kpi-section-title {
-      font-weight: bold;
-      color: #1565c0;
-      margin-bottom: 6px;
-      font-size: 15px;
-    }
-    .status-complete {
-      color: #2e7d32;
-      font-weight: bold;
-      font-size: 15px;
-    }
-    .status-pending {
-      color: #f57c00;
-      font-weight: bold;
-      font-size: 15px;
-    }
-  </style>
+        /* Map */
+        #map {
+            position: absolute;
+            top: 0;
+            left: 260px;
+            right: 0;
+            bottom: 0;
+        }
+
+        /* Zoom buttons */
+        .zoom-box {
+            position: absolute;
+            top: 80px;
+            left: 280px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 6px rgba(0,0,0,0.3);
+            z-index: 900;
+        }
+        .zoom-box button {
+            display: block;
+            width: 140px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 5px;
+            border: 1px solid #aaa;
+        }
+
+        /* Legend */
+        #legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px 14px;
+            border-radius: 6px;
+            box-shadow: 0 0 6px rgba(0,0,0,0.3);
+            z-index: 900;
+            font-size: 14px;
+        }
+        .legend-box {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            margin-right: 6px;
+            border: 1px solid #000;
+        }
+    </style>
 </head>
+
 <body>
 
-  <div id="map"></div>
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <h2>FEU Operations Dashboard</h2>
+        <p><strong>Total sectors:</strong> 6</p>
+        <p><strong>Updated:</strong> November 2025</p>
+        <hr>
+        <p>Click a sector on the map for more details.</p>
+    </div>
 
-  <!-- Leaflet JS + Omnivore -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet-omnivore@0.3.4/leaflet-omnivore.min.js"></script>
+    <!-- Map -->
+    <div id="map"></div>
 
-  <script>
-    const map = L.map('map').setView([-1.30, 36.83], 13);
+    <!-- Zoom Buttons -->
+    <div id="zoom-controls" class="zoom-box">
+        <button onclick="zoomTo(upperhill)">Upperhill</button>
+        <button onclick="zoomTo(eastleigh)">Eastleigh</button>
+        <button onclick="zoomTo(cbd)">CBD</button>
+        <button onclick="zoomTo(donholm)">Donholm–Umoja</button>
+        <button onclick="zoomTo(mountainview)">Mountain View</button>
+    </div>
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+    <!-- Legend -->
+    <div id="legend">
+        <h4>Legend</h4>
+        <div><span class="legend-box" style="background:#e41a1c"></span> CBD</div>
+        <div><span class="legend-box" style="background:#377eb8"></span> Upperhill</div>
+        <div><span class="legend-box" style="background:#4daf4a"></span> Eastleigh</div>
+        <div><span class="legend-box" style="background:#984ea3"></span> Donholm–Umoja</div>
+        <div><span class="legend-box" style="background:#ff7f00"></span> Mountain View</div>
+    </div>
 
-    // ---------------------------
-    // FUNCTION TO ATTACH KPIs
-    // ---------------------------
-    function attachKPIPopup(layer, kpis) {
-      layer.on('click', function(e) {
-        const popup = `
-          <div class="kpi-popup">
-            <div class="kpi-title">${kpis.title}</div>
-            <div class="kpi-section">
-              <div class="kpi-section-title">FEU ENFORCEMENT KPIs</div>
-              <div><b>Meters Inspected:</b> ${kpis.metersInspected}</div>
-              <div><b>Inspection Coverage:</b> ${kpis.inspectionCoverage}</div>
-              <div><b>Anomalies:</b> ${kpis.anomalies}</div>
-              <div><b>Recovered Units:</b> ${kpis.recoveredUnits}</div>
-              <div><b>Amount Recovered:</b> ${kpis.amountRecovered}</div>
-              <div><b>Arrests:</b> ${kpis.arrests}</div>
-              <div><b>Status:</b> 
-                <span class="${kpis.inspectionStatus === 'Complete' ? 'status-complete' : 'status-pending'}">
-                  ${kpis.inspectionStatus}
-                </span>
-              </div>
-            </div>
-          </div>`;
-        L.popup().setLatLng(e.latlng).setContent(popup).openOn(map);
-      });
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- KML Loader -->
+    <script src="https://unpkg.com/leaflet-omnivore@0.3.4/leaflet-omnivore.min.js"></script>
 
-      layer.on('mouseover', () => layer.setStyle({ fillOpacity: 0.55, weight: 5 }));
-      layer.on('mouseout', () => layer.setStyle({ fillOpacity: 0.35, weight: 4 }));
-    }
+    <script>
+        // Initialize map
+        var map = L.map('map').setView([-1.286389, 36.817223], 12);
 
-    // ---------------------------
-    // UPPERHILL SECTOR
-    // ---------------------------
-    omnivore.kml('UPPERHILL%20EXTENT.kml').on('ready', function () {
-      const layer = this;
-      layer.setStyle({
-        color: '#d32f2f',
-        fillColor: '#ff5252',
-        weight: 4,
-        fillOpacity: 0.35
-      });
+        // Basemap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20
+        }).addTo(map);
 
-      attachKPIPopup(layer, {
-        title: "UPPERHILL SECTOR",
-        metersInspected: "40,149",
-        inspectionCoverage: "100%",
-        anomalies: "8,201",
-        recoveredUnits: "4,052,829.97 kWh",
-        amountRecovered: "KSh 113,479,239.16",
-        arrests: "22",
-        inspectionStatus: "Complete"
-      });
+        // Load KML layers
+        var upperhill = omnivore.kml('UPPERHILL EXTENT.kml').on('ready', function() {
+            this.setStyle({color: "#377eb8", weight: 3});
+        }).addTo(map);
 
-      layer.addTo(map);
-    });
+        var eastleigh = omnivore.kml('EASTLEIGH SECTOR.kml').on('ready', function() {
+            this.setStyle({color: "#4daf4a", weight: 3});
+        }).addTo(map);
 
-    // ---------------------------
-    // MOUNTAIN VIEW SECTOR
-    // ---------------------------
-    omnivore.kml('MOUNTAIN%20VIEW%20EXTENT.kml').on('ready', function () {
-      const layer = this;
-      layer.setStyle({
-        color: '#1565c0',
-        fillColor: '#64b5f6',
-        weight: 4,
-        fillOpacity: 0.35
-      });
+        var cbd = omnivore.kml('THE NAIROBI CBD.kml').on('ready', function() {
+            this.setStyle({color: "#e41a1c", weight: 3});
+        }).addTo(map);
 
-      attachKPIPopup(layer, {
-        title: "MOUNTAIN VIEW SECTOR",
-        metersInspected: "0",
-        inspectionCoverage: "0%",
-        anomalies: "0",
-        recoveredUnits: "0 kWh",
-        amountRecovered: "KSh 0.00",
-        arrests: "0",
-        inspectionStatus: "Pending"
-      });
+        var donholm = omnivore.kml('DONHOLM_UMOJA SECTOR.kml').on('ready', function() {
+            this.setStyle({color: "#984ea3", weight: 3});
+        }).addTo(map);
 
-      layer.addTo(map);
-    });
+        var mountainview = omnivore.kml('MOUNTAIN VIEW EXTENT.kml').on('ready', function() {
+            this.setStyle({color: "#ff7f00", weight: 3});
+        }).addTo(map);
 
-    // ---------------------------
-    // DONHOLM–UMOJA SECTOR
-    // ---------------------------
-    omnivore.kml('DONHOLM_UMOJA%20SECTOR.kml').on('ready', function () {
-      const layer = this;
-      layer.setStyle({
-        color: '#2e7d32',
-        fillColor: '#81c784',
-        weight: 4,
-        fillOpacity: 0.35
-      });
+        // Zoom-to-layer function
+        function zoomTo(layer) {
+            map.fitBounds(layer.getBounds());
+        }
 
-      attachKPIPopup(layer, {
-        title: "DONHOLM–UMOJA SECTOR",
-        metersInspected: "0",
-        inspectionCoverage: "0%",
-        anomalies: "0",
-        recoveredUnits: "0 kWh",
-        amountRecovered: "KSh 0.00",
-        arrests: "0",
-        inspectionStatus: "Pending"
-      });
-
-      layer.addTo(map);
-    });
-
-    // ---------------------------
-    // EASTLEIGH SECTOR
-    // ---------------------------
-    omnivore.kml('EASTLEIGH%20SECTOR.kml').on('ready', function () {
-      const layer = this;
-      layer.setStyle({
-        color: '#6a1b9a',
-        fillColor: '#ba68c8',
-        weight: 4,
-        fillOpacity: 0.35
-      });
-
-      attachKPIPopup(layer, {
-        title: "EASTLEIGH SECTOR",
-        metersInspected: "0",
-        inspectionCoverage: "0%",
-        anomalies: "0",
-        recoveredUnits: "0 kWh",
-        amountRecovered: "KSh 0.00",
-        arrests: "0",
-        inspectionStatus: "Pending"
-      });
-
-      layer.addTo(map);
-    });
-
-    // ---------------------------
-    // NAIROBI CBD SECTOR
-    // ---------------------------
-    omnivore.kml('THE%20NAIROBI%20CBD.kml').on('ready', function () {
-      const layer = this;
-      layer.setStyle({
-        color: '#f9a825',
-        fillColor: '#ffd54f',
-        weight: 4,
-        fillOpacity: 0.35
-      });
-
-      attachKPIPopup(layer, {
-        title: "NAIROBI CBD SECTOR",
-        metersInspected: "0",
-        inspectionCoverage: "0%",
-        anomalies: "0",
-        recoveredUnits: "0 kWh",
-        amountRecovered: "KSh 0.00",
-        arrests: "0",
-        inspectionStatus: "Pending"
-      });
-
-      layer.addTo(map);
-    });
-
-  </script>
+        // Example sidebar update on click
+        cbd.on("click", function() {
+            document.getElementById("sidebar").innerHTML = `
+                <h2>Nairobi CBD</h2>
+                <p><strong>Type:</strong> Commercial hub</p>
+                <p><strong>Status:</strong> Active</p>
+                <p><strong>Field officers:</strong> 4</p>
+            `;
+        });
+    </script>
 </body>
 </html>
