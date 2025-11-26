@@ -47,19 +47,6 @@
       margin-bottom: 6px;
       font-size: 15px;
     }
-    .kpi-item {
-      margin: 4px 0;
-      line-height: 1.5;
-    }
-    .kpi-label {
-      font-weight: bold;
-      color: #1976d2;
-    }
-    .highlight {
-      font-weight: bold;
-      color: #b71c1c;
-      font-size: 15px;
-    }
     .status-complete {
       color: #2e7d32;
       font-weight: bold;
@@ -81,159 +68,173 @@
   <script src="https://unpkg.com/leaflet-omnivore@0.3.4/leaflet-omnivore.min.js"></script>
 
   <script>
-    // Initialize map
-    const map = L.map('map').setView([-1.3025, 36.82], 12.5);
+    const map = L.map('map').setView([-1.30, 36.83], 13);
 
-    // Base map
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // === UPPERHILL SECTOR ===
-    const upperhillKML = omnivore.kml('UPPERHILL%20EXTENT.kml')
-      .on('ready', function () {
-        const layer = this;
-
-        layer.setStyle({
-          color: '#d32f2f',
-          weight: 4,
-          opacity: 1,
-          fillColor: '#ff5252',
-          fillOpacity: 0.35
-        });
-
-        const kpis = {
-          title: "UPPERHILL SECTOR",
-          metersInspected: "40,149",
-          inspectionCoverage: "100%",
-          anomalies: "8,201",
-          recoveredUnits: "4,052,829.97 kWh",
-          amountRecovered: "KSh 113,479,239.16",
-          arrests: "22",
-          inspectionStatus: "Complete"
-        };
-
-        layer.on('click', function (e) {
-          const popup = `
-            <div class="kpi-popup">
-              <div class="kpi-title">${kpis.title}</div>
-              <div class="kpi-section">
-                <div class="kpi-section-title">FEU ENFORCEMENT KPIs</div>
-                <div class="kpi-item"><b>Meters Inspected:</b> ${kpis.metersInspected}</div>
-                <div class="kpi-item"><b>Inspection Coverage:</b> ${kpis.inspectionCoverage}</div>
-                <div class="kpi-item"><b>Anomalies:</b> ${kpis.anomalies}</div>
-                <div class="kpi-item"><b>Recovered Units:</b> ${kpis.recoveredUnits}</div>
-                <div class="kpi-item"><b>Amount Recovered:</b> ${kpis.amountRecovered}</div>
-                <div class="kpi-item"><b>Arrests:</b> ${kpis.arrests}</div>
-                <div class="kpi-item"><b>Status:</b> <span class="status-complete">${kpis.inspectionStatus}</span></div>
+    // ---------------------------
+    // FUNCTION TO ATTACH KPIs
+    // ---------------------------
+    function attachKPIPopup(layer, kpis) {
+      layer.on('click', function(e) {
+        const popup = `
+          <div class="kpi-popup">
+            <div class="kpi-title">${kpis.title}</div>
+            <div class="kpi-section">
+              <div class="kpi-section-title">FEU ENFORCEMENT KPIs</div>
+              <div><b>Meters Inspected:</b> ${kpis.metersInspected}</div>
+              <div><b>Inspection Coverage:</b> ${kpis.inspectionCoverage}</div>
+              <div><b>Anomalies:</b> ${kpis.anomalies}</div>
+              <div><b>Recovered Units:</b> ${kpis.recoveredUnits}</div>
+              <div><b>Amount Recovered:</b> ${kpis.amountRecovered}</div>
+              <div><b>Arrests:</b> ${kpis.arrests}</div>
+              <div><b>Status:</b> 
+                <span class="${kpis.inspectionStatus === 'Complete' ? 'status-complete' : 'status-pending'}">
+                  ${kpis.inspectionStatus}
+                </span>
               </div>
-            </div>`;
-          L.popup().setLatLng(e.latlng).setContent(popup).openOn(map);
-        });
-
-        layer.on('mouseover', () => layer.setStyle({ fillOpacity: 0.55, weight: 5 }));
-        layer.on('mouseout', () => layer.setStyle({ fillOpacity: 0.35, weight: 4 }));
-
-        layer.addTo(map);
+            </div>
+          </div>`;
+        L.popup().setLatLng(e.latlng).setContent(popup).openOn(map);
       });
 
-    // === MOUNTAIN VIEW SECTOR ===
-    const mountainKML = omnivore.kml('MOUNTAIN%20VIEW%20EXTENT.kml')
-      .on('ready', function () {
-        const layer = this;
+      layer.on('mouseover', () => layer.setStyle({ fillOpacity: 0.55, weight: 5 }));
+      layer.on('mouseout', () => layer.setStyle({ fillOpacity: 0.35, weight: 4 }));
+    }
 
-        layer.setStyle({
-          color: '#1565c0',
-          weight: 4,
-          opacity: 1,
-          fillColor: '#64b5f6',
-          fillOpacity: 0.35
-        });
-
-        const kpis = {
-          title: "MOUNTAIN VIEW SECTOR",
-          metersInspected: "0",
-          inspectionCoverage: "95%",
-          anomalies: "0",
-          recoveredUnits: "0 kWh",
-          amountRecovered: "KSh 0.00",
-          arrests: "0",
-          inspectionStatus: "Pending"
-        };
-
-        layer.on('click', function (e) {
-          const popup = `
-            <div class="kpi-popup">
-              <div class="kpi-title">${kpis.title}</div>
-              <div class="kpi-section">
-                <div class="kpi-section-title">FEU ENFORCEMENT KPIs</div>
-                <div class="kpi-item"><b>Meters Inspected:</b> ${kpis.metersInspected}</div>
-                <div class="kpi-item"><b>Inspection Coverage:</b> ${kpis.inspectionCoverage}</div>
-                <div class="kpi-item"><b>Anomalies:</b> ${kpis.anomalies}</div>
-                <div class="kpi-item"><b>Recovered Units:</b> ${kpis.recoveredUnits}</div>
-                <div class="kpi-item"><b>Amount Recovered:</b> ${kpis.amountRecovered}</div>
-                <div class="kpi-item"><b>Arrests:</b> ${kpis.arrests}</div>
-                <div class="kpi-item"><b>Status:</b> <span class="status-pending">${kpis.inspectionStatus}</span></div>
-              </div>
-            </div>`;
-          L.popup().setLatLng(e.latlng).setContent(popup).openOn(map);
-        });
-
-        layer.on('mouseover', () => layer.setStyle({ fillOpacity: 0.55, weight: 5 }));
-        layer.on('mouseout', () => layer.setStyle({ fillOpacity: 0.35, weight: 4 }));
-
-        layer.addTo(map);
+    // ---------------------------
+    // UPPERHILL SECTOR
+    // ---------------------------
+    omnivore.kml('UPPERHILL%20EXTENT.kml').on('ready', function () {
+      const layer = this;
+      layer.setStyle({
+        color: '#d32f2f',
+        fillColor: '#ff5252',
+        weight: 4,
+        fillOpacity: 0.35
       });
 
-    // === DONHOLM / UMOJA SECTOR ===
-    const donholmKML = omnivore.kml('DONHOLM_UMOJA%20SECTOR.kml')
-      .on('ready', function () {
-        const layer = this;
-
-        layer.setStyle({
-          color: '#2e7d32',
-          weight: 4,
-          opacity: 1,
-          fillColor: '#81c784',
-          fillOpacity: 0.35
-        });
-
-        const kpis = {
-          title: "DONHOLM / UMOJA SECTOR",
-          metersInspected: "0",
-          inspectionCoverage: "0%",
-          anomalies: "0",
-          recoveredUnits: "0 kWh",
-          amountRecovered: "KSh 0.00",
-          arrests: "0",
-          inspectionStatus: "Pending"
-        };
-
-        layer.on('click', function (e) {
-          const popup = `
-            <div class="kpi-popup">
-              <div class="kpi-title">${kpis.title}</div>
-              <div class="kpi-section">
-                <div class="kpi-section-title">FEU ENFORCEMENT KPIs</div>
-                <div class="kpi-item"><b>Meters Inspected:</b> ${kpis.metersInspected}</div>
-                <div class="kpi-item"><b>Inspection Coverage:</b> ${kpis.inspectionCoverage}</div>
-                <div class="kpi-item"><b>Anomalies:</b> ${kpis.anomalies}</div>
-                <div class="kpi-item"><b>Recovered Units:</b> ${kpis.recoveredUnits}</div>
-                <div class="kpi-item"><b>Amount Recovered:</b> ${kpis.amountRecovered}</div>
-                <div class="kpi-item"><b>Arrests:</b> ${kpis.arrests}</div>
-                <div class="kpi-item"><b>Status:</b> <span class="status-pending">${kpis.inspectionStatus}</span></div>
-              </div>
-            </div>`;
-          L.popup().setLatLng(e.latlng).setContent(popup).openOn(map);
-        });
-
-        layer.on('mouseover', () => layer.setStyle({ fillOpacity: 0.55, weight: 5 }));
-        layer.on('mouseout', () => layer.setStyle({ fillOpacity: 0.35, weight: 4 }));
-
-        layer.addTo(map);
+      attachKPIPopup(layer, {
+        title: "UPPERHILL SECTOR",
+        metersInspected: "40,149",
+        inspectionCoverage: "100%",
+        anomalies: "8,201",
+        recoveredUnits: "4,052,829.97 kWh",
+        amountRecovered: "KSh 113,479,239.16",
+        arrests: "22",
+        inspectionStatus: "Complete"
       });
+
+      layer.addTo(map);
+    });
+
+    // ---------------------------
+    // MOUNTAIN VIEW SECTOR
+    // ---------------------------
+    omnivore.kml('MOUNTAIN%20VIEW%20EXTENT.kml').on('ready', function () {
+      const layer = this;
+      layer.setStyle({
+        color: '#1565c0',
+        fillColor: '#64b5f6',
+        weight: 4,
+        fillOpacity: 0.35
+      });
+
+      attachKPIPopup(layer, {
+        title: "MOUNTAIN VIEW SECTOR",
+        metersInspected: "0",
+        inspectionCoverage: "0%",
+        anomalies: "0",
+        recoveredUnits: "0 kWh",
+        amountRecovered: "KSh 0.00",
+        arrests: "0",
+        inspectionStatus: "Pending"
+      });
+
+      layer.addTo(map);
+    });
+
+    // ---------------------------
+    // DONHOLM–UMOJA SECTOR
+    // ---------------------------
+    omnivore.kml('DONHOLM_UMOJA%20SECTOR.kml').on('ready', function () {
+      const layer = this;
+      layer.setStyle({
+        color: '#2e7d32',
+        fillColor: '#81c784',
+        weight: 4,
+        fillOpacity: 0.35
+      });
+
+      attachKPIPopup(layer, {
+        title: "DONHOLM–UMOJA SECTOR",
+        metersInspected: "0",
+        inspectionCoverage: "0%",
+        anomalies: "0",
+        recoveredUnits: "0 kWh",
+        amountRecovered: "KSh 0.00",
+        arrests: "0",
+        inspectionStatus: "Pending"
+      });
+
+      layer.addTo(map);
+    });
+
+    // ---------------------------
+    // EASTLEIGH SECTOR
+    // ---------------------------
+    omnivore.kml('EASTLEIGH%20SECTOR.kml').on('ready', function () {
+      const layer = this;
+      layer.setStyle({
+        color: '#6a1b9a',
+        fillColor: '#ba68c8',
+        weight: 4,
+        fillOpacity: 0.35
+      });
+
+      attachKPIPopup(layer, {
+        title: "EASTLEIGH SECTOR",
+        metersInspected: "0",
+        inspectionCoverage: "0%",
+        anomalies: "0",
+        recoveredUnits: "0 kWh",
+        amountRecovered: "KSh 0.00",
+        arrests: "0",
+        inspectionStatus: "Pending"
+      });
+
+      layer.addTo(map);
+    });
+
+    // ---------------------------
+    // NAIROBI CBD SECTOR
+    // ---------------------------
+    omnivore.kml('THE%20NAIROBI%20CBD.kml').on('ready', function () {
+      const layer = this;
+      layer.setStyle({
+        color: '#f9a825',
+        fillColor: '#ffd54f',
+        weight: 4,
+        fillOpacity: 0.35
+      });
+
+      attachKPIPopup(layer, {
+        title: "NAIROBI CBD SECTOR",
+        metersInspected: "0",
+        inspectionCoverage: "0%",
+        anomalies: "0",
+        recoveredUnits: "0 kWh",
+        amountRecovered: "KSh 0.00",
+        arrests: "0",
+        inspectionStatus: "Pending"
+      });
+
+      layer.addTo(map);
+    });
+
   </script>
 </body>
 </html>
-
