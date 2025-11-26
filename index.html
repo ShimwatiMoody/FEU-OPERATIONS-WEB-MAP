@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FIELD ENFORCEMENT UNIT OPERATIONS</title>
 
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-  <!-- Custom Styling -->
   <style>
     html, body {
       height: 100%;
@@ -74,13 +72,27 @@
       margin-right: 8px;
       opacity: 0.9;
     }
+
+    /* NORTH ARROW */
+    .north-arrow {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 9999;
+      width: 60px;
+      opacity: 0.9;
+    }
+
   </style>
 </head>
 <body>
 
+  <!-- NORTH ARROW ICON -->
+  <img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/Compass_Rose_English_North.svg"
+       class="north-arrow">
+
   <div id="map"></div>
 
-  <!-- Leaflet JS + Omnivore -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-omnivore@0.3.4/leaflet-omnivore.min.js"></script>
 
@@ -92,9 +104,6 @@
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // ---------------------------
-    // FUNCTION TO ATTACH KPIs
-    // ---------------------------
     function attachKPIPopup(layer, kpis) {
       layer.on('click', function(e) {
         const popup = `
@@ -122,151 +131,71 @@
       layer.on('mouseout', () => layer.setStyle({ fillOpacity: 0.35, weight: 4 }));
     }
 
-    // ---------------------------
-    // UPPERHILL SECTOR
-    // ---------------------------
     omnivore.kml('UPPERHILL%20EXTENT.kml').on('ready', function () {
       const layer = this;
-      layer.setStyle({
-        color: '#d32f2f',
-        fillColor: '#ff5252',
-        weight: 4,
-        fillOpacity: 0.35
-      });
-
+      layer.setStyle({ color:'#d32f2f', fillColor:'#ff5252', weight:4, fillOpacity:0.35 });
       attachKPIPopup(layer, {
-        title: "UPPERHILL SECTOR",
-        metersInspected: "40,149",
-        inspectionCoverage: "100%",
-        anomalies: "8,201",
-        recoveredUnits: "4,052,829.97 kWh",
-        amountRecovered: "KSh 113,479,239.16",
-        arrests: "22",
-        inspectionStatus: "Complete"
+        title:"UPPERHILL SECTOR", metersInspected:"40,149", inspectionCoverage:"100%",
+        anomalies:"8,201", recoveredUnits:"4,052,829.97 kWh",
+        amountRecovered:"KSh 113,479,239.16", arrests:"22", inspectionStatus:"Complete"
       });
-
       layer.addTo(map);
     });
 
-    // ---------------------------
-    // MOUNTAIN VIEW SECTOR
-    // ---------------------------
     omnivore.kml('MOUNTAIN%20VIEW%20EXTENT.kml').on('ready', function () {
       const layer = this;
-      layer.setStyle({
-        color: '#1565c0',
-        fillColor: '#64b5f6',
-        weight: 4,
-        fillOpacity: 0.35
-      });
-
+      layer.setStyle({ color:'#1565c0', fillColor:'#64b5f6', weight:4, fillOpacity:0.35 });
       attachKPIPopup(layer, {
-        title: "MOUNTAIN VIEW SECTOR",
-        metersInspected: "0",
-        inspectionCoverage: "0%",
-        anomalies: "0",
-        recoveredUnits: "0 kWh",
-        amountRecovered: "KSh 0.00",
-        arrests: "0",
-        inspectionStatus: "Pending"
+        title:"MOUNTAIN VIEW SECTOR", metersInspected:"0", inspectionCoverage:"0%",
+        anomalies:"0", recoveredUnits:"0 kWh", amountRecovered:"KSh 0.00",
+        arrests:"0", inspectionStatus:"Pending"
       });
-
       layer.addTo(map);
     });
 
-    // ---------------------------
-    // DONHOLM–UMOJA SECTOR
-    // ---------------------------
     omnivore.kml('DONHOLM_UMOJA%20SECTOR.kml').on('ready', function () {
       const layer = this;
-      layer.setStyle({
-        color: '#2e7d32',
-        fillColor: '#81c784',
-        weight: 4,
-        fillOpacity: 0.35
-      });
-
+      layer.setStyle({ color:'#2e7d32', fillColor:'#81c784', weight:4, fillOpacity:0.35 });
       attachKPIPopup(layer, {
-        title: "DONHOLM–UMOJA SECTOR",
-        metersInspected: "0",
-        inspectionCoverage: "0%",
-        anomalies: "0",
-        recoveredUnits: "0 kWh",
-        amountRecovered: "KSh 0.00",
-        arrests: "0",
-        inspectionStatus: "Pending"
+        title:"DONHOLM–UMOJA SECTOR", metersInspected:"0", inspectionCoverage:"0%",
+        anomalies:"0", recoveredUnits:"0 kWh", amountRecovered:"KSh 0.00",
+        arrests:"0", inspectionStatus:"Pending"
       });
-
       layer.addTo(map);
     });
 
-    // ---------------------------
-    // EASTLEIGH SECTOR
-    // ---------------------------
     omnivore.kml('EASTLEIGH%20SECTOR.kml').on('ready', function () {
       const layer = this;
-      layer.setStyle({
-        color: '#6a1b9a',
-        fillColor: '#ba68c8',
-        weight: 4,
-        fillOpacity: 0.35
-      });
-
+      layer.setStyle({ color:'#6a1b9a', fillColor:'#ba68c8', weight:4, fillOpacity:0.35 });
       attachKPIPopup(layer, {
-        title: "EASTLEIGH SECTOR",
-        metersInspected: "0",
-        inspectionCoverage: "0%",
-        anomalies: "0",
-        recoveredUnits: "0 kWh",
-        amountRecovered: "KSh 0.00",
-        arrests: "0",
-        inspectionStatus: "Pending"
+        title:"EASTLEIGH SECTOR", metersInspected:"0", inspectionCoverage:"0%",
+        anomalies:"0", recoveredUnits:"0 kWh", amountRecovered:"KSh 0.00",
+        arrests:"0", inspectionStatus:"Pending"
       });
-
       layer.addTo(map);
     });
 
-    // ---------------------------
-    // NAIROBI CBD SECTOR
-    // ---------------------------
     omnivore.kml('THE%20NAIROBI%20CBD.kml').on('ready', function () {
       const layer = this;
-      layer.setStyle({
-        color: '#f9a825',
-        fillColor: '#ffd54f',
-        weight: 4,
-        fillOpacity: 0.35
-      });
-
+      layer.setStyle({ color:'#f9a825', fillColor:'#ffd54f', weight:4, fillOpacity:0.35 });
       attachKPIPopup(layer, {
-        title: "NAIROBI CITY CENTER",
-        metersInspected: "0",
-        inspectionCoverage: "0%",
-        anomalies: "0",
-        recoveredUnits: "0 kWh",
-        amountRecovered: "KSh 0.00",
-        arrests: "0",
-        inspectionStatus: "Pending"
+        title:"NAIROBI CBD SECTOR", metersInspected:"0", inspectionCoverage:"0%",
+        anomalies:"0", recoveredUnits:"0 kWh", amountRecovered:"KSh 0.00",
+        arrests:"0", inspectionStatus:"Pending"
       });
-
       layer.addTo(map);
     });
 
-    // ---------------------------
-    // LEGEND
-    // ---------------------------
     var legend = L.control({ position: "bottomright" });
 
     legend.onAdd = function(map) {
       var div = L.DomUtil.create("div", "legend");
-
       div.innerHTML += "<b>SECTOR LEGEND</b><br>";
       div.innerHTML += '<i style="background:#ff5252"></i> Upperhill<br>';
       div.innerHTML += '<i style="background:#64b5f6"></i> Mountain View<br>';
       div.innerHTML += '<i style="background:#81c784"></i> Donholm–Umoja<br>';
       div.innerHTML += '<i style="background:#ba68c8"></i> Eastleigh<br>';
-      div.innerHTML += '<i style="background:#ffd54f"></i> Nairobi City Center<br>';
-
+      div.innerHTML += '<i style="background:#ffd54f"></i> Nairobi CBD<br>';
       return div;
     };
 
@@ -275,4 +204,3 @@
   </script>
 </body>
 </html>
-
