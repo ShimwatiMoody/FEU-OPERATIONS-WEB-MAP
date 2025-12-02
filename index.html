@@ -82,7 +82,6 @@
       width: 60px;
       opacity: 0.9;
     }
-
   </style>
 </head>
 <body>
@@ -130,6 +129,10 @@
       layer.on('mouseover', () => layer.setStyle({ fillOpacity: 0.55, weight: 5 }));
       layer.on('mouseout', () => layer.setStyle({ fillOpacity: 0.35, weight: 4 }));
     }
+
+    /* ==============================
+       EXISTING KML LAYERS
+       ============================== */
 
     omnivore.kml('UPPERHILL%20EXTENT.kml').on('ready', function () {
       const layer = this;
@@ -186,6 +189,25 @@
       layer.addTo(map);
     });
 
+    /* ==============================
+       NEW — INDUSTRIAL AREA SECTOR
+       ============================== */
+
+    omnivore.kml('INDUSTRIAL%20AREA%20SECTOR.kml').on('ready', function () {
+      const layer = this;
+      layer.setStyle({ color:'#00838f', fillColor:'#4dd0e1', weight:4, fillOpacity:0.35 });
+      attachKPIPopup(layer, {
+        title:"INDUSTRIAL AREA SECTOR", metersInspected:"0", inspectionCoverage:"0%",
+        anomalies:"0", recoveredUnits:"0 kWh", amountRecovered:"KSh 0.00",
+        arrests:"0", inspectionStatus:"Pending"
+      });
+      layer.addTo(map);
+    });
+
+    /* ==============================
+       LEGEND
+       ============================== */
+
     var legend = L.control({ position: "bottomright" });
 
     legend.onAdd = function(map) {
@@ -196,6 +218,7 @@
       div.innerHTML += '<i style="background:#81c784"></i> Donholm–Umoja<br>';
       div.innerHTML += '<i style="background:#ba68c8"></i> Eastleigh<br>';
       div.innerHTML += '<i style="background:#ffd54f"></i> Nairobi CBD<br>';
+      div.innerHTML += '<i style="background:#4dd0e1"></i> Industrial Area<br>';
       return div;
     };
 
